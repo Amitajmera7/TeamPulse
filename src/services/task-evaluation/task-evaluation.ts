@@ -6,15 +6,20 @@
  */
 
 export { calculateContribution } from "./calculate-contribution";
-export { calculateEfficiency } from "./calculate-efficiency";
+export { calculateEfficiency, calculateEfficiencyForIssue } from "./calculate-efficiency";
+export { resolveAllocationDenominatorHours } from "./allocation-context";
 export { calculateQuality } from "./calculate-quality";
 export { evaluateTask } from "./evaluate-task";
 export { resolveEstimate } from "./resolve-estimate";
 export { resolveWorklogs } from "./resolve-worklogs";
 
 export type {
+  EfficiencyRating,
   EstimateSource,
   EvaluateTaskOptions,
+  ExecutionEfficiencyInput,
+  ExecutionEfficiencyReason,
+  ExecutionEfficiencyResult,
   JiraIssueInput,
   ResolvedEstimate,
   ResolvedWorklogs,

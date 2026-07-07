@@ -93,3 +93,38 @@ export interface EvaluateTaskOptions {
   developer: string;
   evaluatedAt?: string;
 }
+
+/** Reason execution efficiency could not be calculated. */
+export type ExecutionEfficiencyReason =
+  | "missing-estimate"
+  | "missing-worklogs"
+  | "invalid-allocation";
+
+/** Human-readable execution efficiency band. */
+export type EfficiencyRating =
+  | "Excellent"
+  | "Very Good"
+  | "On Track"
+  | "Needs Improvement"
+  | "Critical Overrun"
+  | "Unresolved";
+
+/** Inputs required to calculate execution efficiency. */
+export interface ExecutionEfficiencyInput {
+  estimate: ResolvedEstimate;
+  worklogs: ResolvedWorklogs;
+  /** Denominator used for estimate allocation (subtask or technology total hours). */
+  allocationDenominatorHours: number;
+}
+
+/** Output of the Execution Efficiency Engine. */
+export interface ExecutionEfficiencyResult {
+  resolved: boolean;
+  reason?: ExecutionEfficiencyReason;
+  allocatedEstimate: number;
+  actualHours: number;
+  variancePercentage: number;
+  tolerancePercentage: number;
+  efficiencyScore: number;
+  rating: EfficiencyRating;
+}

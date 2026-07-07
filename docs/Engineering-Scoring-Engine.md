@@ -1883,3 +1883,25 @@ This document defines the official Engineering Scoring Engine used by TeamPulse.
 Every engineering KPI, dashboard component and AI insight must conform to the business rules documented here.
 
 Business rules should be updated here before implementation changes are made in the application.
+
+----
+
+## Principle 7
+
+### Fair Engineering Evaluation
+
+TeamPulse evaluates engineering performance independently from data quality.
+
+Developers should never be penalized for missing planning data that is outside their control.
+
+Examples:
+
+- Missing estimates
+- Missing technology mappings
+- Missing Jira configuration
+
+These situations are treated as Engineering Data Quality issues rather than engineering performance issues.
+
+Data Quality issues are reported separately from Engineering Score.
+
+---
