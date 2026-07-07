@@ -1,17 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 import { GlobalFilterBar } from "@/components/common/layout/global-filter-bar";
-import { Sidebar } from "@/components/common/layout/sidebar";
+import { Sidebar, MobileMenuButton } from "@/components/common/layout/sidebar";
 import { TopNavbar } from "@/components/common/layout/top-navbar";
-import { cn } from "@/lib/utils";
 
 interface AppLayoutProps {
   children: React.ReactNode;
 }
 
 export function AppLayout({ children }: AppLayoutProps) {
+  const pathname = usePathname();
+  const isDashboard = pathname === "/dashboard";
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
 
@@ -27,7 +29,7 @@ export function AppLayout({ children }: AppLayoutProps) {
   }, []);
 
   return (
-    <div className={cn("flex h-screen overflow-hidden bg-background")}>
+    <div className="flex h-screen overflow-hidden bg-background">
       <Sidebar
         mobileOpen={mobileOpen}
         collapsed={collapsed}
@@ -36,8 +38,19 @@ export function AppLayout({ children }: AppLayoutProps) {
       />
 
       <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
-        <TopNavbar onMobileMenuOpen={() => setMobileOpen(true)} />
-        <GlobalFilterBar />
+        {!isDashboard && (
+          <>
+            <TopNavbar onMobileMenuOpen={() => setMobileOpen(true)} />
+            <GlobalFilterBar />
+          </>
+        )}
+
+        {isDashboard && (
+          <div className="flex h-14 items-center border-b border-border px-4 lg:hidden">
+            <MobileMenuButton onClick={() => setMobileOpen(true)} />
+            <span className="ml-2 text-sm font-semibold">Dashboard</span>
+          </div>
+        )}
 
         <main className="flex-1 overflow-y-auto">{children}</main>
       </div>

@@ -12,15 +12,15 @@ interface QuickActionsProps {
 
 const ACTIONS = [
   { label: "Sync Data", icon: RefreshCw },
-  { label: "Export", icon: Download },
-  { label: "Share", icon: Share2 },
+  { label: "Export Report", icon: Download },
+  { label: "Share Dashboard", icon: Share2 },
 ] as const;
 
 export function QuickActions({ collapsed = false, className }: QuickActionsProps) {
   return (
-    <div className={cn("space-y-2", className)}>
+    <div className={cn("space-y-1.5", className)}>
       {!collapsed && (
-        <p className="px-3 text-xs font-medium tracking-wide text-sidebar-foreground/50 uppercase">
+        <p className="px-2.5 text-[11px] font-medium tracking-wider text-sidebar-foreground/45 uppercase">
           Quick Actions
         </p>
       )}
@@ -28,18 +28,18 @@ export function QuickActions({ collapsed = false, className }: QuickActionsProps
         {ACTIONS.map(({ label, icon: Icon }) => (
           <Button
             key={label}
-            variant="ghost"
+            variant="outline"
             size={collapsed ? "icon-sm" : "sm"}
             disabled
             aria-label={label}
             title={label}
             className={cn(
-              "w-full justify-start gap-2 text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+              "w-full justify-start gap-2 border-sidebar-border bg-background text-sidebar-foreground/80 shadow-none transition-all duration-200 hover:border-sidebar-primary/30 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
               collapsed && "size-8 w-8 justify-center px-0"
             )}
           >
-            <Icon className="size-4 shrink-0" aria-hidden />
-            {!collapsed && <span>{label}</span>}
+            <Icon className="size-3.5 shrink-0" aria-hidden />
+            {!collapsed && <span className="text-xs">{label}</span>}
           </Button>
         ))}
       </div>

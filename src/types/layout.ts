@@ -21,7 +21,6 @@ export interface BreadcrumbItem {
 export interface PageHeaderProps {
   title: string;
   description?: string;
-  greeting?: string;
 }
 
 export interface SectionCardProps {

@@ -5,6 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { CardSkeleton } from "@/components/dashboard/skeletons";
 import { cn } from "@/lib/utils";
 import type { SectionCardProps } from "@/types/layout";
 
@@ -16,18 +17,16 @@ export function SectionCard({
   return (
     <Card
       className={cn(
-        "transition-shadow duration-200 hover:shadow-sm",
+        "border border-border ring-0 transition-colors duration-150 hover:border-foreground/15",
         className
       )}
     >
-      <CardHeader className="border-b border-border/50">
-        <CardTitle>{label}</CardTitle>
-        <CardDescription>{description}</CardDescription>
+      <CardHeader className="border-b border-border/50 px-4 pt-4 pb-2">
+        <CardTitle className="text-sm font-semibold">{label}</CardTitle>
+        <CardDescription className="text-xs">{description}</CardDescription>
       </CardHeader>
-      <CardContent>
-        <div className="flex min-h-[120px] items-center justify-center rounded-lg border border-dashed border-border bg-muted/30">
-          <span className="text-sm text-muted-foreground">Placeholder</span>
-        </div>
+      <CardContent className="px-4 py-4">
+        <CardSkeleton rows={2} />
       </CardContent>
     </Card>
   );

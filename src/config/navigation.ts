@@ -2,6 +2,7 @@ import {
   BarChart3,
   Bot,
   LayoutDashboard,
+  Link2,
   Settings,
   Trophy,
   Users,
@@ -12,7 +13,12 @@ import type { NavItem } from "@/types/layout";
 
 export const SIDEBAR_WIDTH = 280;
 
-export const NAV_ITEMS: NavItem[] = [
+export interface NavItemConfig extends NavItem {
+  badge?: string;
+  disabled?: boolean;
+}
+
+export const NAV_ITEMS: NavItemConfig[] = [
   {
     label: "Dashboard",
     href: "/dashboard",
@@ -42,11 +48,18 @@ export const NAV_ITEMS: NavItem[] = [
     label: "AI Insights",
     href: "/ai",
     icon: Bot,
+    badge: "Beta",
   },
   {
     label: "Settings",
     href: "/settings",
     icon: Settings,
+  },
+  {
+    label: "Integrations",
+    href: "#",
+    icon: Link2,
+    disabled: true,
   },
 ];
 
@@ -59,3 +72,27 @@ export const ROUTE_LABELS: Record<string, string> = {
   ai: "AI Insights",
   settings: "Settings",
 };
+
+export interface NavGroup {
+  label: string;
+  items: NavItem["href"][];
+}
+
+export const NAV_GROUPS: NavGroup[] = [
+  {
+    label: "Overview",
+    items: ["/dashboard"],
+  },
+  {
+    label: "Analytics",
+    items: ["/developers", "/teams", "/analytics", "/leaderboard"],
+  },
+  {
+    label: "Intelligence",
+    items: ["/ai"],
+  },
+  {
+    label: "Workspace",
+    items: ["/settings", "#"],
+  },
+];

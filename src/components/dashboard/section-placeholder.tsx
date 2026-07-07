@@ -18,14 +18,14 @@ export function SectionPlaceholder({
   children,
 }: SectionPlaceholderProps) {
   return (
-    <section className="space-y-4">
+    <section className="space-y-2.5">
       <div>
-        <h2 className="text-lg font-semibold text-foreground">{title}</h2>
+        <h2 className="text-sm font-semibold text-foreground">{title}</h2>
         {description && (
-          <p className="mt-1 text-sm text-muted-foreground">{description}</p>
+          <p className="mt-0.5 text-xs text-muted-foreground">{description}</p>
         )}
       </div>
-      <div className={cn("grid gap-6", COLUMN_CLASSES[columns])}>{children}</div>
+      <div className={cn("grid gap-3", COLUMN_CLASSES[columns])}>{children}</div>
     </section>
   );
 }

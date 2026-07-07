@@ -1,16 +1,18 @@
-import { PageContainer } from "@/components/common/layout/page-container";
-import { PageHeader } from "@/components/common/layout/page-header";
+import { DashboardHero } from "@/components/dashboard/dashboard-hero";
+import { DashboardTopBar } from "@/components/dashboard/dashboard-top-bar";
 import { ExecutiveDashboard } from "@/components/dashboard/executive-dashboard";
+import { PageContainer } from "@/components/common/layout/page-container";
+import { getDashboardData } from "@/services/dashboard/dashboard-aggregator";
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const data = await getDashboardData();
+
   return (
     <>
-      <PageHeader
-        title="Engineering Overview"
-        description="Monitor delivery health, productivity, and team performance"
-      />
+      <DashboardTopBar />
+      <DashboardHero engineeringScore={data.engineeringScore} />
       <PageContainer>
-        <ExecutiveDashboard />
+        <ExecutiveDashboard data={data} />
       </PageContainer>
     </>
   );
