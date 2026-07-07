@@ -38,13 +38,20 @@ export interface ResolvedEstimate {
   technology?: string;
 }
 
-/** Output of the Worklog Resolution step (factual, not scored). */
+/** Output of the Worklog Resolution Engine (factual, not scored). */
 export interface ResolvedWorklogs {
-  issueKey: string;
-  developer: string;
-  worklogs: TaskWorklog[];
-  totalHours: number;
+  /** True when at least one developer worklog was found. */
+  resolved: boolean;
+  /** Sum of developer worklog hours (decimal). */
+  actualHours: number;
+  /** Number of matching developer worklogs. */
   worklogCount: number;
+  /** Earliest worklog start timestamp for the developer, if any. */
+  firstWorklogDate: string | null;
+  /** Latest worklog start timestamp for the developer, if any. */
+  lastWorklogDate: string | null;
+  /** Developer worklogs only — never total issue worklogs. */
+  worklogs: TaskWorklog[];
 }
 
 /**
@@ -72,6 +79,13 @@ export interface TaskEvaluation {
 export interface JiraIssueInput {
   key?: string;
   fields?: Record<string, unknown>;
+}
+
+/** Raw Jira worklog entry shape used during resolution. */
+export interface JiraWorklogEntry {
+  author?: { displayName?: string };
+  timeSpentSeconds?: number;
+  started?: string;
 }
 
 /** Options passed to the task evaluation orchestrator. */

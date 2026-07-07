@@ -1,25 +1,51 @@
-import type { JiraIssueInput, ResolvedWorklogs, TaskWorklog } from "./types";
+import {
+  gatherDeveloperWorklogs,
+  resolveWorklogDateRange,
+  sumWorklogHours,
+} from "./parse-worklogs";
+import type { JiraIssueInput, ResolvedWorklogs } from "./types";
+import { collectWorklogSources } from "./worklog-sources";
+
+function emptyResolvedWorklogs(): ResolvedWorklogs {
+  return {
+    resolved: false,
+    actualHours: 0,
+    worklogCount: 0,
+    firstWorklogDate: null,
+    lastWorklogDate: null,
+    worklogs: [],
+  };
+}
 
 /**
  * Resolves developer worklogs for a task.
  *
- * TODO: Implement worklog extraction from Jira issue payload.
- * TODO: Filter worklogs by developer display name.
- * TODO: Apply worklog interpretation rules from issue-types config.
+ * Reads engineering subtask worklogs only and never includes Story-level
+ * worklogs or worklogs belonging to other developers.
+ *
+ * Issue status is intentionally ignored — status filtering belongs to the
+ * evaluation engine.
  */
 export function resolveWorklogs(
   issue: JiraIssueInput,
   developer: string
 ): ResolvedWorklogs {
-  void issue;
+  const sources = collectWorklogSources(issue);
+  const worklogs = gatherDeveloperWorklogs(sources, developer);
 
-  const worklogs: TaskWorklog[] = [];
+  if (worklogs.length === 0) {
+    return emptyResolvedWorklogs();
+  }
+
+  const { firstWorklogDate, lastWorklogDate } =
+    resolveWorklogDateRange(worklogs);
 
   return {
-    issueKey: issue.key ?? "",
-    developer,
-    worklogs,
-    totalHours: 0,
+    resolved: true,
+    actualHours: sumWorklogHours(worklogs),
     worklogCount: worklogs.length,
+    firstWorklogDate,
+    lastWorklogDate,
+    worklogs,
   };
 }

@@ -42,7 +42,7 @@ export function evaluateTask(
     isDevelopmentComplete,
     estimateHours: estimate.hours,
     estimateSource: estimate.source,
-    actualHours: worklogs.totalHours,
+    actualHours: worklogs.actualHours,
     worklogCount: worklogs.worklogCount,
     worklogs: worklogs.worklogs,
     evaluatedAt,
