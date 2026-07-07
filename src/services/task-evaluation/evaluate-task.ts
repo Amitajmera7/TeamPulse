@@ -1,4 +1,4 @@
-import { resolveEstimate } from "./resolve-estimate";
+import { readIssueType, resolveEstimate } from "./resolve-estimate";
 import { resolveWorklogs } from "./resolve-worklogs";
 import type {
   EvaluateTaskOptions,
@@ -9,19 +9,6 @@ import type {
 function readStatus(issue: JiraIssueInput): string {
   const status = issue.fields?.status as { name?: string } | undefined;
   return status?.name ?? "";
-}
-
-function readIssueType(issue: JiraIssueInput): string {
-  const typeField = issue.fields?.customfield_10132 as
-    | { value?: string }
-    | string
-    | undefined;
-
-  if (typeof typeField === "string") {
-    return typeField;
-  }
-
-  return typeField?.value ?? "";
 }
 
 /**
@@ -47,14 +34,14 @@ export function evaluateTask(
   // TODO: Wire calculateContribution once contribution rules are implemented.
 
   return {
-    issueKey: issue.key ?? estimate.issueKey,
-    issueType: estimate.issueType || readIssueType(issue),
+    issueKey: issue.key ?? "",
+    issueType: readIssueType(issue),
     status: readStatus(issue),
-    technology: estimate.technology,
+    technology: estimate.technology ?? "",
     developer,
     isDevelopmentComplete,
-    estimateHours: estimate.estimateHours,
-    estimateSource: estimate.estimateSource,
+    estimateHours: estimate.hours,
+    estimateSource: estimate.source,
     actualHours: worklogs.totalHours,
     worklogCount: worklogs.worklogCount,
     worklogs: worklogs.worklogs,

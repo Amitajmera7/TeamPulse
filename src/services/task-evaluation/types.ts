@@ -12,14 +12,30 @@ export interface TaskWorklog {
   startedAt: string | null;
 }
 
-/** Output of the Estimate Resolution step (factual, not scored). */
+/**
+ * Describes how an engineering estimate was resolved.
+ *
+ * All unresolved outcomes use `resolved: false` and `hours: 0`.
+ */
+export type EstimateSource =
+  | "jira-original-estimate"
+  | "technology-estimate-field"
+  | "unknown-developer"
+  | "missing-estimate"
+  | "unsupported-issue-type";
+
+/** Output of the Estimate Resolution Engine (factual, not scored). */
 export interface ResolvedEstimate {
-  issueKey: string;
-  developer: string;
-  technology: string;
-  issueType: string;
-  estimateHours: number;
-  estimateSource: string;
+  /** Resolved estimate in hours. Zero when unresolved. */
+  hours: number;
+  /** Resolution method or unresolved reason. */
+  source: EstimateSource;
+  /** Jira field path used or attempted during resolution. */
+  field: string;
+  /** True when a valid estimate was resolved. */
+  resolved: boolean;
+  /** Developer technology when resolved for CR / RE work. */
+  technology?: string;
 }
 
 /** Output of the Worklog Resolution step (factual, not scored). */
@@ -45,7 +61,7 @@ export interface TaskEvaluation {
   developer: string;
   isDevelopmentComplete: boolean;
   estimateHours: number;
-  estimateSource: string;
+  estimateSource: EstimateSource | string;
   actualHours: number;
   worklogCount: number;
   worklogs: TaskWorklog[];

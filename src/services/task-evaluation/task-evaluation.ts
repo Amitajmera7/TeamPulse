@@ -13,6 +13,7 @@ export { resolveEstimate } from "./resolve-estimate";
 export { resolveWorklogs } from "./resolve-worklogs";
 
 export type {
+  EstimateSource,
   EvaluateTaskOptions,
   JiraIssueInput,
   ResolvedEstimate,
