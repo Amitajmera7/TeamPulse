@@ -1,6 +1,9 @@
+import { ELIGIBLE_DEVELOPERS } from "@/config/eligible-developers";
 import { buildDeveloperMetrics } from "@/services/metrics/build-developer-metrics";
 
-import type { ApiDeveloperMetric, HealthMetrics } from "./types";
+import { calculateContributionMetrics } from "./calculate-contribution-score";
+import { calculateQualityMetrics } from "./calculate-quality";
+import type { ApiContributionMetric, ApiDeveloperMetric, HealthMetrics, ScoreComponents } from "./types";
 import {
   getLastMonths,
   isDeliveredStatus,
@@ -22,13 +25,9 @@ function getIssueMonth(issue: unknown): string | null {
 
 function countDeliveryRisk(issues: unknown[]): number {
   return issues.filter((issue) => {
-    const typed = issue as {
-      fields?: { status?: { name?: string } };
-    };
+    const typed = issue as { fields?: { status?: { name?: string } } };
     const status = typed.fields?.status?.name;
-    return (
-      issueHasEligibleWorklog(typed) && !isDeliveredStatus(status)
-    );
+    return issueHasEligibleWorklog(typed) && !isDeliveredStatus(status);
   }).length;
 }
 
@@ -52,15 +51,12 @@ function productivityFromMetrics(metrics: ApiDeveloperMetric[]): number {
   return Math.round(total / active.length);
 }
 
-function utilizationFromMetrics(metrics: ApiDeveloperMetric[]): number {
-  const totalActual = metrics.reduce((sum, m) => sum + m.actualHours, 0);
-  const totalEstimated = metrics.reduce((sum, m) => sum + m.estimatedHours, 0);
-  if (totalEstimated === 0) return 0;
+/** Activity coverage — beta proxy until capacity-based utilization exists. */
+function participationFromMetrics(metrics: ApiDeveloperMetric[]): number {
+  const activeCount = metrics.filter((m) => m.actualHours > 0).length;
+  if (ELIGIBLE_DEVELOPERS.length === 0) return 0;
 
-  return Math.min(
-    100,
-    Math.round((totalActual / totalEstimated) * 100)
-  );
+  return Math.round((activeCount / ELIGIBLE_DEVELOPERS.length) * 100);
 }
 
 async function productivityForIssues(issues: unknown[]): Promise<number> {
@@ -70,7 +66,8 @@ async function productivityForIssues(issues: unknown[]): Promise<number> {
 
 export async function calculateHealthMetrics(
   issues: unknown[],
-  metrics: ApiDeveloperMetric[]
+  metrics: ApiDeveloperMetric[],
+  contribution: ApiContributionMetric[]
 ): Promise<HealthMetrics> {
   const months = getLastMonths(7);
   const monthKeys = months.map((m) => monthKey(m));
@@ -89,22 +86,28 @@ export async function calculateHealthMetrics(
     productivityByMonth.push(await productivityForIssues(monthIssues));
 
     const { metrics: monthMetrics } = await buildDeveloperMetrics(monthIssues);
-    utilizationByMonth.push(utilizationFromMetrics(monthMetrics));
+    utilizationByMonth.push(participationFromMetrics(monthMetrics));
     riskByMonth.push(countDeliveryRisk(monthIssues));
   }
 
-  const deliveryHealth = deliveryHealthForIssues(issues);
-  const productivity = productivityFromMetrics(metrics);
-  const utilization = utilizationFromMetrics(metrics);
-  const riskCount = countDeliveryRisk(issues);
+  const { quality, qualitySparkline } = await calculateQualityMetrics(
+    issues,
+    metrics
+  );
+  const { contribution: contributionScore, contributionSparkline } =
+    await calculateContributionMetrics(issues, metrics, contribution);
 
   return {
-    deliveryHealth,
-    productivity,
-    utilization,
-    riskCount,
+    deliveryHealth: deliveryHealthForIssues(issues),
+    productivity: productivityFromMetrics(metrics),
+    quality,
+    contribution: contributionScore,
+    utilizationParticipation: participationFromMetrics(metrics),
+    riskCount: countDeliveryRisk(issues),
     deliverySparkline: padSparkline(deliveryByMonth),
     productivitySparkline: padSparkline(productivityByMonth),
+    qualitySparkline,
+    contributionSparkline,
     utilizationSparkline: padSparkline(utilizationByMonth),
     riskSparkline: padSparkline(riskByMonth),
   };
@@ -113,7 +116,6 @@ export async function calculateHealthMetrics(
 export function buildKpisFromHealth(health: HealthMetrics) {
   const deliveryStatus = statusFromPercent(health.deliveryHealth);
   const productivityStatus = statusFromPercent(health.productivity);
-  const utilizationStatus = statusFromPercent(health.utilization);
   const riskStatus = statusFromRisk(health.riskCount);
 
   const deliveryTrend = trendFromDelta(
@@ -124,9 +126,9 @@ export function buildKpisFromHealth(health: HealthMetrics) {
     health.productivity,
     health.productivitySparkline.at(-2) ?? health.productivity
   );
-  const utilizationTrend = trendFromDelta(
-    health.utilization,
-    health.utilizationSparkline.at(-2) ?? health.utilization
+  const participationTrend = trendFromDelta(
+    health.utilizationParticipation,
+    health.utilizationSparkline.at(-2) ?? health.utilizationParticipation
   );
   const riskTrend = riskTrendLabel(health.riskCount);
 
@@ -156,13 +158,14 @@ export function buildKpisFromHealth(health: HealthMetrics) {
     {
       id: "utilization" as const,
       title: "Resource Utilization",
-      value: `${health.utilization}%`,
-      status: utilizationStatus.status,
-      statusLabel: utilizationStatus.label,
-      trend: utilizationTrend.trend,
-      trendLabel: utilizationTrend.label,
+      value: `${health.utilizationParticipation}%`,
+      status: "neutral" as const,
+      statusLabel: "Beta",
+      trend: participationTrend.trend,
+      trendLabel: "Activity coverage · Beta",
       chartColor: "var(--chart-3)",
       sparkline: health.utilizationSparkline,
+      badge: "Beta",
     },
     {
       id: "risk" as const,
@@ -177,4 +180,15 @@ export function buildKpisFromHealth(health: HealthMetrics) {
       valueClassName: "text-destructive",
     },
   ];
+}
+
+export function buildScoreComponents(health: HealthMetrics): ScoreComponents {
+  return {
+    deliveryHealth: health.deliveryHealth,
+    productivity: health.productivity,
+    quality: health.quality,
+    contribution: health.contribution,
+    utilization: health.utilizationParticipation,
+    riskHealth: Math.max(0, 100 - health.riskCount * 12),
+  };
 }

@@ -1,4 +1,4 @@
-import { format, subMonths, startOfMonth } from "date-fns";
+import { format, endOfMonth, startOfMonth, subMonths } from "date-fns";
 
 import { DELIVERED_STATUSES } from "@/config/delivered-statuses";
 import { ELIGIBLE_DEVELOPERS } from "@/config/eligible-developers";
@@ -125,6 +125,22 @@ export function utilizationHealthScore(utilization: number): number {
 
 export function riskHealthScore(riskCount: number): number {
   return Math.max(0, 100 - riskCount * 12);
+}
+
+export function getReportingPeriod(): {
+  month: string;
+  from: string;
+  to: string;
+} {
+  const now = new Date();
+  const from = startOfMonth(now);
+  const to = endOfMonth(now);
+
+  return {
+    month: format(now, "MMMM yyyy"),
+    from: from.toISOString(),
+    to: to.toISOString(),
+  };
 }
 
 export function padSparkline(values: number[], length = 7): number[] {

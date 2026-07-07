@@ -72,6 +72,8 @@ export interface MetricCardProps {
 
   valueClassName?: string;
 
+  badge?: string;
+
   className?: string;
 }
 
@@ -89,6 +91,9 @@ export interface TechnologyCardProps {
   sparkline: readonly number[];
 
   chartColor?: string;
+
+  /** Present in DashboardData; not rendered by the card yet. */
+  efficiency?: number;
 
   className?: string;
 }

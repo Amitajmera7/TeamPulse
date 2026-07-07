@@ -61,6 +61,7 @@ export function ExecutiveDashboard({ data }: ExecutiveDashboardProps) {
                 chartColor={kpi.chartColor}
                 sparkline={kpi.sparkline}
                 valueClassName={kpi.valueClassName}
+                badge={kpi.badge}
               />
             );
           })}
@@ -91,7 +92,7 @@ export function ExecutiveDashboard({ data }: ExecutiveDashboardProps) {
             </p>
           </div>
           <div className={`grid grid-cols-1 sm:grid-cols-2 ${dashboardGridGap}`}>
-            {data.technologies.map((tech) => (
+            {data.technologies.map(({ healthScore: _, ...tech }) => (
               <TechnologyCard key={tech.id} {...tech} />
             ))}
           </div>
@@ -111,7 +112,7 @@ export function ExecutiveDashboard({ data }: ExecutiveDashboardProps) {
 
       <section className={`grid grid-cols-1 lg:grid-cols-5 ${dashboardGridGap}`}>
         <ExecutiveBrief
-          briefItems={data.briefItems}
+          insights={data.insights}
           className="lg:col-span-3"
         />
         <AiInsightsCard className="lg:col-span-2" />

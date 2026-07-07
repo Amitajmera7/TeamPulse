@@ -1,7 +1,5 @@
 import { buildDeveloperMetrics } from "@/services/metrics/build-developer-metrics";
 
-import type { BriefItem, HealthMetrics, TechnologyCardData } from "./types";
-import type { ContributorRow } from "./types";
 import {
   formatMonthLabel,
   getLastMonths,

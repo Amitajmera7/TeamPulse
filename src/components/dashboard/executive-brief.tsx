@@ -12,7 +12,7 @@ import {
   dashboardCardHeader,
   dashboardTypography,
 } from "@/lib/dashboard-ui";
-import type { BriefItem } from "@/services/dashboard/types";
+import type { EngineeringInsight } from "@/services/dashboard/types";
 import { cn } from "@/lib/utils";
 
 const DOT_TONE: Record<string, string> = {
@@ -22,11 +22,11 @@ const DOT_TONE: Record<string, string> = {
 };
 
 interface ExecutiveBriefProps {
-  briefItems: BriefItem[];
+  insights: EngineeringInsight[];
   className?: string;
 }
 
-export function ExecutiveBrief({ briefItems, className }: ExecutiveBriefProps) {
+export function ExecutiveBrief({ insights, className }: ExecutiveBriefProps) {
   return (
     <Card className={cn(dashboardCard, className)}>
       <CardHeader
@@ -41,7 +41,7 @@ export function ExecutiveBrief({ briefItems, className }: ExecutiveBriefProps) {
       </CardHeader>
 
       <CardContent className={cn(dashboardCardContent, "divide-y divide-border/60 p-0 pt-0")}>
-        {briefItems.map((item) => (
+        {insights.map((item) => (
           <div
             key={item.id}
             className="group flex items-start gap-3 px-5 py-4 transition-colors duration-200 hover:bg-muted/35"

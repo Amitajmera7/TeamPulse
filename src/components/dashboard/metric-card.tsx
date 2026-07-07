@@ -26,6 +26,7 @@ export function MetricCard({
   chartColor = "var(--chart-2)",
   sparkline = [],
   valueClassName,
+  badge,
   className,
 }: MetricCardProps) {
   return (
@@ -40,7 +41,14 @@ export function MetricCard({
           <span className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-border/70 bg-muted/50">
             <Icon className="size-4 text-foreground/80" aria-hidden />
           </span>
-          <span className={dashboardTypography.label}>{title}</span>
+          <span className={dashboardTypography.label}>
+            {title}
+            {badge ? (
+              <span className="ml-1.5 text-[11px] font-medium text-muted-foreground">
+                ({badge})
+              </span>
+            ) : null}
+          </span>
         </div>
         <StatusBadge status={status} label={statusLabel} />
       </CardHeader>
