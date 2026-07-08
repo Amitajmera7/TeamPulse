@@ -12,10 +12,18 @@ export {
   calculateQuality,
   getBaseQualityScore,
 } from "./calculate-quality";
+export { calculateRecovery } from "./calculate-recovery";
 export { evaluateTask } from "./evaluate-task";
 export { resolveEstimate } from "./resolve-estimate";
 export { resolveWorklogs } from "./resolve-worklogs";
 
+export type {
+  RecoveryBugType,
+  RecoveryHoursBreakdown,
+  RecoveryInput,
+  RecoveryRating,
+  RecoveryResult,
+} from "./calculate-recovery";
 export type {
   BugType,
   QualityBugRecord,
