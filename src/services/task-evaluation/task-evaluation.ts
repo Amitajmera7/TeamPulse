@@ -8,11 +8,22 @@
 export { calculateContribution } from "./calculate-contribution";
 export { calculateEfficiency, calculateEfficiencyForIssue } from "./calculate-efficiency";
 export { resolveAllocationDenominatorHours } from "./allocation-context";
-export { calculateQuality } from "./calculate-quality";
+export {
+  calculateQuality,
+  getBaseQualityScore,
+} from "./calculate-quality";
 export { evaluateTask } from "./evaluate-task";
 export { resolveEstimate } from "./resolve-estimate";
 export { resolveWorklogs } from "./resolve-worklogs";
 
+export type {
+  BugType,
+  QualityBugRecord,
+  QualityInput,
+  QualityRating,
+  QualityReason,
+  QualityResult,
+} from "./calculate-quality";
 export type {
   EfficiencyRating,
   EstimateSource,
