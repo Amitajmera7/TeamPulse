@@ -5,7 +5,12 @@
  * Calculation modules are stubbed for future milestones.
  */
 
-export { calculateContribution } from "./calculate-contribution";
+export {
+  calculateContribution,
+  calculateContributionPercentage,
+  calculateDeveloperDeliveredHours,
+  calculateTotalDeliveredHours,
+} from "./calculate-contribution";
 export { calculateEfficiency, calculateEfficiencyForIssue } from "./calculate-efficiency";
 export { resolveAllocationDenominatorHours } from "./allocation-context";
 export {
@@ -17,6 +22,10 @@ export { evaluateTask } from "./evaluate-task";
 export { resolveEstimate } from "./resolve-estimate";
 export { resolveWorklogs } from "./resolve-worklogs";
 
+export type {
+  ContributionInput,
+  ContributionResult,
+} from "./calculate-contribution";
 export type {
   RecoveryBugType,
   RecoveryHoursBreakdown,
