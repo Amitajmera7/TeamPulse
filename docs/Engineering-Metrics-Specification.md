@@ -366,6 +366,70 @@ These issues never reduce Engineering Performance.
 
 ---
 
+# Aggregation Layer
+
+## Developer Evaluation
+
+Status: Active (Sprint 3B Milestone 8A)
+
+### Purpose
+
+Aggregate all implemented task-evaluation engine results into a single developer-scoped evaluation for a reporting period.
+
+### Contains
+
+• Execution Efficiency (`ExecutionEfficiencyResult`)
+
+• Delivery Quality (`QualityResult`)
+
+• Recovery (`RecoveryResult`)
+
+• Business Contribution (`ContributionResult`)
+
+### Rules
+
+• Engine outputs remain intact — never flatten into primitives.
+
+• Recovery remains visible and does not affect Engineering Score.
+
+• Reporting Period must be included.
+
+• Technology comes from team mapping; missing mapping must not invent a value.
+
+### Output
+
+`DeveloperEvaluation`
+
+---
+
+## Developer Profile
+
+Status: Active (Sprint 3B Milestone 8A)
+
+### Purpose
+
+Canonical developer object used throughout TeamPulse.
+
+### Contains
+
+• `evaluation` — Developer Evaluation
+
+• `status` — Healthy | Good | Needs Attention | Critical | No Data
+
+### Rules
+
+• Developers with no completed work still appear with status "No Data".
+
+• Engineering Score is intentionally excluded in Milestone 8A (extension point for Milestone 8B).
+
+• Ranking is not calculated in Milestone 8A.
+
+### Output
+
+`DeveloperProfile`
+
+---
+
 # Engineering Principles
 
 ## Principle 1
