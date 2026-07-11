@@ -54,6 +54,18 @@ Allocated Estimate is the foundation for:
 
 ---
 
+## Analytics Snapshot
+
+Immutable record of one completed analytics calculation.
+
+Contains version (`"1.0"`), developer profiles, technology profiles, dashboard data, reporting period, and sync metadata.
+
+The dashboard always consumes the latest completed snapshot and never calculates analytics directly.
+
+Every sync creates a brand-new snapshot. Existing snapshots are never mutated.
+
+---
+
 # B
 
 ## Business Contribution

@@ -566,6 +566,74 @@ Dense ranking by Technology Health DESC, then Engineering Value Delivered DESC.
 
 ---
 
+## Analytics Snapshot
+
+Status: Active (Sprint 3D Milestone 10A)
+
+### Purpose
+
+Immutable record of one completed analytics calculation.
+
+The dashboard must never calculate analytics directly. It consumes the latest completed Analytics Snapshot.
+
+### Pipeline
+
+```
+Jira Data
+    ↓
+Analytics Engines
+    ↓
+Analytics Snapshot
+    ↓
+Dashboard
+```
+
+### Contains
+
+• `version` — initial value `"1.0"`
+
+• `generatedAt`
+
+• `reportingPeriod`
+
+• `developerProfiles`
+
+• `technologyProfiles`
+
+• `dashboardData`
+
+• `syncMetadata`
+
+### Sync Metadata
+
+• `syncStartedAt`
+
+• `syncCompletedAt`
+
+• `syncDurationMs`
+
+• `totalIssuesProcessed`
+
+• `totalWorklogsProcessed`
+
+• `status` — Idle | Running | Completed | Failed
+
+### Rules
+
+• Snapshots are immutable. Every sync creates a brand-new snapshot.
+
+• Dashboard consumes only the latest Completed snapshot.
+
+• Never serve partially updated data.
+
+• Milestone 10A defines the model only — no caching, persistence, or scheduled jobs.
+
+### Output
+
+`AnalyticsSnapshot`
+
+---
+
 # Engineering Principles
 
 ## Principle 1
