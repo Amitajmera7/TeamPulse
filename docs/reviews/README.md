@@ -9,6 +9,7 @@
 
 - reviews/02-engineering-architecture.md
 - Engineering-Analytics-Warehouse.md
+- Warehouse-Integration-Architecture.md
 
 ## Engineering Standards
 
@@ -30,4 +31,5 @@
 - milestone-10C-review.md
 - milestone-11A-review.md
 - milestone-12A-review.md
+- milestone-12B-review.md
 ...

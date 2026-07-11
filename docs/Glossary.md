@@ -217,6 +217,12 @@ The long-term analytics system of record for TeamPulse. Stores engineering facts
 
 See: `docs/Engineering-Analytics-Warehouse.md`
 
+## Warehouse Integration Architecture
+
+Target design for cutting over TeamPulse from Jira-driven analytics to warehouse-driven analytics. Jira is ingest only; analytics engines read only Completed warehouse batches; warehouse writes are atomic; the dashboard never serves partial batches.
+
+See: `docs/Warehouse-Integration-Architecture.md`
+
 ## Engineering Score
 
 Overall engineering performance score for a developer in a reporting period.
