@@ -245,6 +245,10 @@ See: `docs/Runtime-Verification.md`
 
 Read layer between the Dashboard UI and analytics sources. Exposes `GET /api/dashboard` returning `DashboardReadModel` built from existing repository outputs (no formula recalculation). Prepares for PostgreSQL/EAW-backed dashboards without UI redesign.
 
+## Operations & Sync Center
+
+Operator UI at `/operations` for monitoring TeamPulse sync health (status, duration, issues/worklogs, EAW batch id, validation/warehouse/analytics status). Consumes `GET /api/operations` and can trigger `POST /api/sync`. Does not change analytics formulas or dashboard calculations.
+
 ## Engineering Score
 
 Overall engineering performance score for a developer in a reporting period.

@@ -25,6 +25,10 @@ import {
 } from "./assemble-developer-profiles";
 import { buildEngineeringWarehouseModel } from "./build-eaw-model";
 import { buildPipelineSnapshot } from "./build-snapshot";
+import {
+  appendOperationsLog,
+  recordLastSyncSummary,
+} from "./last-sync-summary";
 import { persistEngineeringWarehouseBatch } from "./persist-eaw-batch";
 import { publishAnalyticsSnapshot } from "./publish-snapshot";
 import {
@@ -75,6 +79,7 @@ export async function runAnalyticsSync(): Promise<AnalyticsSyncResult> {
 
   const startedAt = new Date().toISOString();
   beginSyncState(startedAt);
+  appendOperationsLog(`[${startedAt}] Sync started`);
 
   let totalIssuesProcessed = 0;
   let totalWorklogsProcessed = 0;
@@ -188,6 +193,17 @@ export async function runAnalyticsSync(): Promise<AnalyticsSyncResult> {
 
     const syncState = completeSyncState(completedAt);
 
+    recordLastSyncSummary({
+      syncState,
+      success: true,
+      issuesProcessed: totalIssuesProcessed,
+      worklogsProcessed: totalWorklogsProcessed,
+      eawBatchId,
+      eawPersisted,
+      snapshotPublished: true,
+      errorMessage: null,
+    });
+
     return {
       success: true,
       syncState,
@@ -203,6 +219,17 @@ export async function runAnalyticsSync(): Promise<AnalyticsSyncResult> {
     const message =
       error instanceof Error ? error.message : "Unknown analytics sync failure.";
     const syncState = failSyncState(message);
+
+    recordLastSyncSummary({
+      syncState,
+      success: false,
+      issuesProcessed: totalIssuesProcessed,
+      worklogsProcessed: totalWorklogsProcessed,
+      eawBatchId,
+      eawPersisted,
+      snapshotPublished: false,
+      errorMessage: message,
+    });
 
     return {
       success: false,

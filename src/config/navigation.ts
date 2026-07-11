@@ -1,4 +1,5 @@
 import {
+  Activity,
   BarChart3,
   Bot,
   LayoutDashboard,
@@ -23,6 +24,11 @@ export const NAV_ITEMS: NavItemConfig[] = [
     label: "Dashboard",
     href: "/dashboard",
     icon: LayoutDashboard,
+  },
+  {
+    label: "Operations",
+    href: "/operations",
+    icon: Activity,
   },
   {
     label: "Developers",
@@ -65,6 +71,7 @@ export const NAV_ITEMS: NavItemConfig[] = [
 
 export const ROUTE_LABELS: Record<string, string> = {
   dashboard: "Dashboard",
+  operations: "Operations",
   developers: "Developers",
   teams: "Teams",
   analytics: "Analytics",
@@ -81,7 +88,7 @@ export interface NavGroup {
 export const NAV_GROUPS: NavGroup[] = [
   {
     label: "Overview",
-    items: ["/dashboard"],
+    items: ["/dashboard", "/operations"],
   },
   {
     label: "Analytics",

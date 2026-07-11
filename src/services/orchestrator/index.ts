@@ -16,6 +16,18 @@ export type { PublishSnapshotResult } from "./publish-snapshot";
 export { runAnalyticsSync } from "./run-analytics-sync";
 export type { AnalyticsSyncResult } from "./run-analytics-sync";
 export {
+  getLastSyncSummary,
+  recordLastSyncSummary,
+  appendOperationsLog,
+  mirrorLiveSyncState,
+} from "./last-sync-summary";
+export type {
+  LastSyncSummary,
+  ValidationOpsStatus,
+  WarehouseOpsStatus,
+  AnalyticsOpsStatus,
+} from "./last-sync-summary";
+export {
   ANALYTICS_SYNC_STEPS,
   beginSyncState,
   completeSyncState,
