@@ -211,6 +211,12 @@ Example
 
 # E
 
+## Engineering Analytics Warehouse (EAW)
+
+The long-term analytics system of record for TeamPulse. Stores engineering facts (sync batches, issues, allocations, worklogs) for one year of history. Never stores derived metrics such as Engineering Score or Technology Health. Jira remains the operational system of record.
+
+See: `docs/Engineering-Analytics-Warehouse.md`
+
 ## Engineering Score
 
 Overall engineering performance score for a developer in a reporting period.

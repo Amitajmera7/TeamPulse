@@ -8,6 +8,7 @@
 ## Architecture
 
 - reviews/02-engineering-architecture.md
+- Engineering-Analytics-Warehouse.md
 
 ## Engineering Standards
 
@@ -28,4 +29,5 @@
 - milestone-10B-review.md
 - milestone-10C-review.md
 - milestone-11A-review.md
+- milestone-12A-review.md
 ...
