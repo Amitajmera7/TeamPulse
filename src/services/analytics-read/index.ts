@@ -3,6 +3,7 @@
  *
  * Sprint 6B Milestone 16: read layer between Dashboard UI and analytics sources.
  * Sprint 7C Milestone 19: Historical Engineering Analytics read projection.
+ * Sprint 7D Milestone 20: Engineering Explorer read projection.
  */
 
 export type { DashboardReadModel } from "./types";
@@ -28,3 +29,17 @@ export type {
   HistorySeriesCompleteness,
   SnapshotHistoryEntry,
 } from "./history";
+
+export {
+  getExplorerReadModel,
+  getExplorerDeveloperDetail,
+  getExplorerTechnologyDetail,
+  getExplorerProjectDetail,
+} from "./explorer";
+export type {
+  ExplorerReadModel,
+  ExplorerDeveloperDetail,
+  ExplorerTechnologyDetail,
+  ExplorerProjectDetail,
+  ExplorerSearchIndexEntry,
+} from "./explorer";

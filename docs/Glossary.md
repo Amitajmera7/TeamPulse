@@ -257,6 +257,10 @@ Operational history UI at `/operations/history` and `/operations/history/[batchI
 
 Trend experience at `/analytics/history` backed by `GET /api/analytics/history`. Projects archived Analytics Snapshot values into chart-ready `TrendChartData` (Engineering Score, Technology Health, Value Delivered, Recovery, Capacity Utilization, Delivery Efficiency). Filters: time range (3/6/12 months), technology, developer. Uses the Analytics Read layer — does not recalculate formulas.
 
+## Engineering Explorer
+
+Drill-down UI at `/explorer` (Overview, Developers, Technologies, Projects, Search) with detail routes under `/explorer/developers|technologies|projects/[id]`. Reads completed Analytics Snapshot profiles plus optional EAW project facts via `GET /api/explorer*`. No formula recalculation; project scores remain unavailable until a Project Profile exists.
+
 ## Engineering Score
 
 Overall engineering performance score for a developer in a reporting period.
