@@ -5,6 +5,10 @@
  * publication for the Dashboard Repository.
  */
 
+export { buildEngineeringWarehouseModel } from "./build-eaw-model";
+export type { BuildEawModelInput } from "./build-eaw-model";
+export { persistEngineeringWarehouseBatch } from "./persist-eaw-batch";
+export type { PersistEawBatchResult } from "./persist-eaw-batch";
 export { buildPipelineSnapshot } from "./build-snapshot";
 export type { BuildPipelineSnapshotInput } from "./build-snapshot";
 export { publishAnalyticsSnapshot } from "./publish-snapshot";

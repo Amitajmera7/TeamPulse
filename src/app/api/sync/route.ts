@@ -32,6 +32,8 @@ export async function POST() {
         generatedAt: result.generatedAt,
         totalIssuesProcessed: result.totalIssuesProcessed,
         totalWorklogsProcessed: result.totalWorklogsProcessed,
+        eawBatchId: result.eawBatchId,
+        eawPersisted: result.eawPersisted,
         error: result.errorMessage,
       },
       { status: result.syncState.status === "Running" ? 409 : 500 }
@@ -45,5 +47,7 @@ export async function POST() {
     generatedAt: result.generatedAt,
     totalIssuesProcessed: result.totalIssuesProcessed,
     totalWorklogsProcessed: result.totalWorklogsProcessed,
+    eawBatchId: result.eawBatchId,
+    eawPersisted: result.eawPersisted,
   });
 }

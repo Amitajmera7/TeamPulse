@@ -20,6 +20,9 @@ export type AnalyticsSyncStep =
   | "Fetch Jira"
   | "Resolve Estimates"
   | "Resolve Worklogs"
+  | "Build EAW Model"
+  | "Validate EAW"
+  | "Persist EAW"
   | "Build Developer Profiles"
   | "Build Technology Profiles"
   | "Build DashboardData"
@@ -31,6 +34,9 @@ export const ANALYTICS_SYNC_STEPS: readonly AnalyticsSyncStep[] = [
   "Fetch Jira",
   "Resolve Estimates",
   "Resolve Worklogs",
+  "Build EAW Model",
+  "Validate EAW",
+  "Persist EAW",
   "Build Developer Profiles",
   "Build Technology Profiles",
   "Build DashboardData",
