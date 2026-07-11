@@ -74,6 +74,17 @@ Calculates presentation KPIs, contributor ranking, technology card mapping, and 
 
 ---
 
+## Dashboard Repository
+
+Sole UI entry point for DashboardData.
+
+Reads the latest completed Analytics Snapshot and returns its `dashboardData` projection. Returns an empty DashboardData when no snapshot exists. Never throws. Abstracts the data provider from React.
+
+The Dashboard Repository currently uses Analytics Snapshot.
+Mock data remains available for development, testing and demos.
+
+---
+
 # B
 
 ## Business Contribution

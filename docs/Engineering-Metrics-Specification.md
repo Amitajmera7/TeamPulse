@@ -701,6 +701,50 @@ Existing trend builders are unchanged. Historical analytics are outside this mil
 
 ---
 
+## Dashboard Repository
+
+Status: Active (Sprint 3D Milestone 10C)
+
+### Purpose
+
+Sole source of `DashboardData` for the React dashboard.
+
+React must not know whether data comes from an Analytics Snapshot, mock, or a future database.
+
+### Pipeline
+
+```
+Dashboard Page
+    ↓
+Dashboard Repository
+    ↓
+Analytics Snapshot
+    ↓
+DashboardData
+```
+
+### Rules
+
+• Read-only — does not recalculate analytics or rebuild snapshots.
+
+• Returns `snapshot.dashboardData` from the latest completed snapshot.
+
+• If no usable snapshot exists, returns empty `DashboardData` (never throws).
+
+• Exposes snapshot `generatedAt` for future Last Sync display.
+
+The Dashboard Repository currently uses Analytics Snapshot.
+Mock data remains available for development, testing and demos.
+
+Production React code must not import `src/config/dashboard-mock.ts` directly.
+The repository remains the single entry point for the UI.
+
+### Output
+
+`DashboardRepositoryResult` `{ dashboardData, generatedAt }`
+
+---
+
 # Engineering Principles
 
 ## Principle 1

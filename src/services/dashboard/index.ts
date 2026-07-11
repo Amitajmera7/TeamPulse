@@ -2,8 +2,8 @@
  * Dashboard services — public module entry.
  *
  * Milestone 10B adds Dashboard Aggregator V2 (snapshot → DashboardData).
- * Legacy `getDashboardData` remains available via dashboard-aggregator.ts
- * for the current React page until snapshot wiring replaces it.
+ * Milestone 10C: UI reads DashboardData via `@/services/dashboard-repository`.
+ * Legacy `dashboard-aggregator.ts` remains for API / sync pipelines until retired.
  */
 
 export {
@@ -17,6 +17,7 @@ export {
   mapTechnologyProfileToCard,
   mapTechnologyStatusToMetricStatus,
 } from "./build-dashboard-data";
+export { buildEmptyDashboardData } from "./build-empty-dashboard-data";
 export {
   buildExecutiveBrief,
   allTechnologiesHealthy,

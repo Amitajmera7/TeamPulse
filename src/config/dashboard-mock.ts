@@ -1,3 +1,12 @@
+/**
+ * Legacy development / demo DashboardData fixture.
+ *
+ * The Dashboard Repository currently uses Analytics Snapshot.
+ * Mock data remains available for development, testing and demos.
+ *
+ * Production UI must NOT import this module. React reads DashboardData
+ * only through `@/services/dashboard-repository`.
+ */
 export const DASHBOARD_MOCK = {
   engineeringScore: {
     value: 86,
