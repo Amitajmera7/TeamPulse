@@ -235,6 +235,12 @@ In-memory validators that check Engineering Analytics Warehouse model consistenc
 
 See: `docs/EAW-Validation.md`
 
+## Runtime Verification
+
+Reconciliation harness that compares Jira, Engineering Analytics Warehouse, Analytics profiles, and DashboardData counts/projections. Reporting only — does not change live sync, formulas, or UI in Milestone 15.
+
+See: `docs/Runtime-Verification.md`
+
 ## Engineering Score
 
 Overall engineering performance score for a developer in a reporting period.
