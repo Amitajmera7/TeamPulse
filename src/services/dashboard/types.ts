@@ -47,6 +47,11 @@ export interface DashboardKpiData {
   sparkline: number[];
   valueClassName?: string;
   badge?: string;
+  /**
+   * Analytics Snapshot generation timestamp (Milestone 10B).
+   * Present on KPIs built from AnalyticsSnapshot.
+   */
+  generatedAt?: string;
 }
 
 export interface TrendChartData {

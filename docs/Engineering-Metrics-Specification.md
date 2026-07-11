@@ -634,6 +634,73 @@ Dashboard
 
 ---
 
+## Dashboard Aggregator V2
+
+Status: Active (Sprint 3D Milestone 10B)
+
+### Purpose
+
+Build `DashboardData` from an Analytics Snapshot so React never calculates analytics.
+
+### Pipeline
+
+```
+Analytics Snapshot
+    ↓
+Dashboard Aggregator
+    ↓
+DashboardData
+    ↓
+React Dashboard
+```
+
+### KPIs
+
+| KPI | Formula |
+|-----|---------|
+| Engineering Health | Weighted average Engineering Score (weight = Delivered Engineering Hours; missing scores excluded) |
+| Engineering Value Delivered | Sum of Delivered Engineering Hours |
+| Quality | Weighted average quality (weight = delivered hours) |
+| Recovery | Total Recovery Hours |
+
+Each KPI includes `generatedAt` from the Analytics Snapshot.
+
+### Contributors
+
+Top 10 Developer Profiles sorted by:
+
+1. Engineering Score DESC
+
+2. Engineering Value Delivered DESC
+
+3. Developer Name ASC
+
+### Technologies
+
+Map Technology Profiles to dashboard cards. Do not recalculate metrics.
+
+### Executive Brief
+
+Always exactly four rule-based insights:
+
+1. Best Performing Technology
+
+2. Highest Engineering Value Delivered
+
+3. Engineering Attention (or all-healthy message)
+
+4. Recovery Focus
+
+### Trends
+
+Existing trend builders are unchanged. Historical analytics are outside this milestone.
+
+### Output
+
+`DashboardData`
+
+---
+
 # Engineering Principles
 
 ## Principle 1

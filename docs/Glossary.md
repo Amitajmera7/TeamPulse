@@ -66,6 +66,14 @@ Every sync creates a brand-new snapshot. Existing snapshots are never mutated.
 
 ---
 
+## Dashboard Aggregator V2
+
+Transforms an Analytics Snapshot into DashboardData for React consumption.
+
+Calculates presentation KPIs, contributor ranking, technology card mapping, and a four-item rule-based Executive Brief. Does not recalculate analytics engines.
+
+---
+
 # B
 
 ## Business Contribution
