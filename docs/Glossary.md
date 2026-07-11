@@ -241,6 +241,10 @@ Reconciliation harness that compares Jira, Engineering Analytics Warehouse, Anal
 
 See: `docs/Runtime-Verification.md`
 
+## Analytics Read API
+
+Read layer between the Dashboard UI and analytics sources. Exposes `GET /api/dashboard` returning `DashboardReadModel` built from existing repository outputs (no formula recalculation). Prepares for PostgreSQL/EAW-backed dashboards without UI redesign.
+
 ## Engineering Score
 
 Overall engineering performance score for a developer in a reporting period.
