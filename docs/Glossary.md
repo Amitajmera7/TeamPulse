@@ -146,21 +146,27 @@ Engine outputs are never flattened. Recovery remains visible and does not affect
 
 Canonical developer object used throughout TeamPulse.
 
-Wraps Developer Evaluation with a profile status:
+Wraps Developer Evaluation with:
 
-• Healthy
+• Engineering Score (full precision)
 
-• Good
+• Status (Healthy / Good / Needs Attention / Critical / No Data)
 
-• Needs Attention
-
-• Critical
-
-• No Data
+• Dense Rank (optional peer ranking)
 
 Developers with no completed work still appear with status "No Data".
 
-Engineering Score is attached in a later milestone (Sprint 3B Milestone 8B).
+Recovery remains visible on the evaluation and does not affect Engineering Score.
+
+---
+
+## Dense Ranking
+
+Ranking method where equal scores share the same rank and the next distinct score receives the next consecutive integer (no gaps).
+
+Example
+
+95, 95, 92 → ranks 1, 1, 2
 
 ---
 
@@ -168,23 +174,31 @@ Engineering Score is attached in a later milestone (Sprint 3B Milestone 8B).
 
 ## Engineering Score
 
-Overall engineering performance score.
+Overall engineering performance score for a developer in a reporting period.
 
-Calculated from weighted engineering KPIs.
+Calculated from implemented KPIs only, with dynamically normalized weights.
 
-Current components
+Current implemented KPIs
 
-• Execution Efficiency
+• Execution Efficiency (raw weight 25)
 
-• Delivery Quality
+• Delivery Quality (raw weight 25)
 
-• Business Contribution
+• Business Contribution (raw weight 20)
 
-Future components may include:
+Missing KPIs are ignored — never treated as zero.
 
-• Recovery
+Contribution Score uses Delivered Engineering Hours normalized against Expected Engineering Capacity Hours (160).
 
-• Data Quality Confidence
+Future KPIs (ignored until implemented)
+
+• Compliance
+
+• Utilization
+
+• AI Insights
+
+Recovery does not affect Engineering Score.
 
 ---
 
@@ -201,6 +215,32 @@ vs
 Actual Worklog Hours
 
 Does not measure Quality.
+
+---
+
+## Technology Profile
+
+Aggregated engineering profile for a technology discipline (Magento, React JS, HTML, DT).
+
+Derived from Developer Profiles.
+
+Technology Health, Execution, and Quality use weighted averages where weight is Engineering Value Delivered (Delivered Engineering Hours).
+
+Developer count comes from Team Mapping (source of truth), not from the aggregated profile set.
+
+Status bands: Healthy, Stable, Monitor, Critical, No Data (when engineering health is null).
+
+Includes Recovery Hours and Recovery Percentage for visibility. Recovery does not affect Technology Health.
+
+---
+
+## Technology Health
+
+Weighted Engineering Score across developers in a technology.
+
+Weight = Delivered Engineering Hours.
+
+Developers who deliver more engineering value influence technology health proportionally.
 
 ---
 

@@ -22,4 +22,6 @@
 - milestone-6-review.md
 - milestone-7-review.md
 - milestone-8A-review.md
+- milestone-8B-review.md
+- milestone-9-review.md
 ...

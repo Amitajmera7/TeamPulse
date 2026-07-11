@@ -404,7 +404,7 @@ Aggregate all implemented task-evaluation engine results into a single developer
 
 ## Developer Profile
 
-Status: Active (Sprint 3B Milestone 8A)
+Status: Active (Sprint 3B Milestone 8B)
 
 ### Purpose
 
@@ -414,19 +414,155 @@ Canonical developer object used throughout TeamPulse.
 
 • `evaluation` — Developer Evaluation
 
+• `engineeringScore` — full-precision score or null (No Data)
+
 • `status` — Healthy | Good | Needs Attention | Critical | No Data
+
+• `rank` — dense rank among peers (null until ranking applied)
 
 ### Rules
 
 • Developers with no completed work still appear with status "No Data".
 
-• Engineering Score is intentionally excluded in Milestone 8A (extension point for Milestone 8B).
+• Engineering Score uses only implemented KPIs with dynamic weight normalization.
 
-• Ranking is not calculated in Milestone 8A.
+• Recovery remains visible and does not affect Engineering Score.
 
 ### Output
 
 `DeveloperProfile`
+
+---
+
+## Engineering Score (Developer)
+
+Status: Active (Sprint 3B Milestone 8B)
+
+### Purpose
+
+Primary developer performance score for the reporting period.
+
+Engineering Score measures engineering execution and delivery performance. It does not measure business impact, customer value, or feature priority.
+
+### Implemented KPIs
+
+| KPI | Raw Weight | Source |
+|-----|------------|--------|
+| Execution | 25 | `efficiencyScore` when resolved |
+| Quality | 25 | `qualityScore` when resolved |
+| Contribution | 20 | Contribution Score from delivered hours |
+
+### Dynamic Normalization
+
+For available KPIs only:
+
+`normalized(k) = rawWeight(k) / sum(rawWeights of available KPIs)`
+
+Never hardcode normalized percentages. Missing KPIs are ignored (not zero).
+
+### Contribution Score
+
+```
+Contribution Score = min(
+  DeliveredEngineeringHours / ExpectedEngineeringCapacityHours × 100,
+  100
+)
+```
+
+Expected Engineering Capacity Hours = 160 (configuration).
+
+### Engineering Score Formula
+
+```
+Engineering Score = Σ (componentScore × normalizedWeight)
+```
+
+Full precision is stored. UI rounding is deferred.
+
+### Status Bands
+
+| Score | Status |
+|-------|--------|
+| ≥ 90 | Healthy |
+| 75 – 89.99 | Good |
+| 60 – 74.99 | Needs Attention |
+| < 60 | Critical |
+| No completed work / no KPIs | No Data |
+
+### Ranking
+
+Dense ranking by Engineering Score (equal scores share rank; next distinct score is consecutive).
+
+### Configuration
+
+`ENGINEERING_SCORE_CONFIG` in `src/services/developer-profile/config.ts`
+
+---
+
+## Technology Profile
+
+Status: Active (Sprint 3C Milestone 9)
+
+### Purpose
+
+Aggregate Developer Profiles into a technology-discipline profile for Magento, React JS, HTML, and DT.
+
+### Contains
+
+• `technology`
+
+• `developerCount` — mapped developers from Team Mapping (source of truth)
+
+• `engineeringHealth` — weighted Engineering Score
+
+• `execution` — weighted Execution Efficiency
+
+• `quality` — weighted Delivery Quality
+
+• `engineeringValueDeliveredHours` — sum of Delivered Engineering Hours
+
+• `recoveryHours` / `recoveryPercentage`
+
+• `status` — Healthy | Stable | Monitor | Critical | No Data
+
+• `rank` — dense rank among technologies
+
+### Weighting
+
+Technology Health, Execution, and Quality use weighted averages.
+
+Weight = Engineering Value Delivered (Delivered Engineering Hours).
+
+Do not use Story Count or Worklog Hours.
+
+Missing developer scores are ignored (never treated as zero).
+
+Developer metrics come from Developer Profiles. Developer count comes from Team Mapping.
+
+### Recovery Percentage
+
+```
+Recovery Percentage =
+  Technology Recovery Hours / Total Recovery Hours × 100
+```
+
+### Status Bands
+
+| Score | Status |
+|-------|--------|
+| ≥ 90 | Healthy |
+| 75 – 89.99 | Stable |
+| 60 – 74.99 | Monitor |
+| < 60 | Critical |
+| null (no engineering value) | No Data |
+
+### Ranking
+
+Dense ranking by Technology Health DESC, then Engineering Value Delivered DESC.
+
+### Output
+
+`TechnologyProfile`
 
 ---
 

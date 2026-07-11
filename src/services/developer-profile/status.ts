@@ -1,11 +1,12 @@
 /**
  * Developer Profile status resolution.
  *
- * Milestone 8A resolves only the "No Data" case from completed work signals.
- * Score-band statuses (Healthy / Good / Needs Attention / Critical) are
- * reserved for Milestone 8B once Engineering Score exists.
+ * Milestone 8B derives status from Engineering Score bands in
+ * {@link ENGINEERING_SCORE_CONFIG.statusThresholds}.
+ * Recovery never influences status.
  */
 
+import { ENGINEERING_SCORE_CONFIG } from "./config";
 import type { DeveloperEvaluation, DeveloperProfileStatus } from "./types";
 
 /**
@@ -42,32 +43,60 @@ export function hasCompletedWork(evaluation: DeveloperEvaluation): boolean {
 }
 
 /**
+ * Maps an Engineering Score to a profile status band.
+ *
+ * Thresholds (from config):
+ * | Score        | Status          |
+ * |--------------|-----------------|
+ * | ≥ 90         | Healthy         |
+ * | 75 – 89.99   | Good            |
+ * | 60 – 74.99   | Needs Attention |
+ * | < 60         | Critical        |
+ *
+ * Pass `null` for No Data (no completed work / no available KPIs).
+ */
+export function resolveStatusFromScore(
+  score: number | null
+): DeveloperProfileStatus {
+  if (score === null) {
+    return "No Data";
+  }
+
+  const { healthy, good, needsAttention } =
+    ENGINEERING_SCORE_CONFIG.statusThresholds;
+
+  if (score >= healthy) {
+    return "Healthy";
+  }
+
+  if (score >= good) {
+    return "Good";
+  }
+
+  if (score >= needsAttention) {
+    return "Needs Attention";
+  }
+
+  return "Critical";
+}
+
+/**
  * Resolves {@link DeveloperProfileStatus} for a developer evaluation.
  *
- * Milestone 8A:
  * - "No Data" when the developer has no completed work
- * - "Good" as a neutral placeholder when completed work exists
+ * - Otherwise derived from Engineering Score via {@link resolveStatusFromScore}
  *
- * Milestone 8B will replace the placeholder with Engineering Score bands:
- * | Score   | Status          |
- * |---------|-----------------|
- * | 90–100  | Healthy         |
- * | 80–89   | (maps to Healthy / Good per scoring doc) |
- * | 70–79   | Good            |
- * | 60–69   | Needs Attention |
- * | < 60    | Critical        |
- *
+ * Prefer calling this with a pre-computed score from
+ * {@link calculateEngineeringScore} to avoid duplicate calculation.
  * Recovery never influences status.
  */
 export function resolveDeveloperProfileStatus(
-  evaluation: DeveloperEvaluation
+  evaluation: DeveloperEvaluation,
+  engineeringScore: number | null = null
 ): DeveloperProfileStatus {
   if (!hasCompletedWork(evaluation)) {
     return "No Data";
   }
 
-  // Extension point (Milestone 8B): derive from Engineering Score.
-  // Until then, completed work maps to a neutral "Good" status so profiles
-  // remain presentable without inventing a score.
-  return "Good";
+  return resolveStatusFromScore(engineeringScore);
 }

@@ -1,10 +1,8 @@
 /**
  * Developer Evaluation & Profile — type definitions.
  *
- * Milestone 8A aggregates task-evaluation engine outputs into the canonical
- * developer objects used throughout TeamPulse.
- *
- * Engineering Score is intentionally excluded (Sprint 3B Milestone 8B).
+ * Milestone 8A aggregates task-evaluation engine outputs.
+ * Milestone 8B attaches Engineering Score, status bands, and dense ranking.
  */
 
 import type { ReportingPeriod } from "@/services/dashboard/types";
@@ -14,15 +12,15 @@ import type {
   QualityResult,
   RecoveryResult,
 } from "@/services/task-evaluation/task-evaluation";
+import type { EngineeringScoreKpi } from "./config";
 
 export type { ReportingPeriod };
 
 /**
  * Profile health status for a developer in the reporting period.
  *
- * Score-band mapping (Healthy / Good / Needs Attention / Critical) is
- * provisional in Milestone 8A. Milestone 8B will derive these from
- * Engineering Score. "No Data" means no completed engineering work.
+ * Derived from Engineering Score bands (Milestone 8B), except "No Data"
+ * when the developer has no completed engineering work / no available KPIs.
  */
 export type DeveloperProfileStatus =
   | "Healthy"
@@ -62,24 +60,56 @@ export interface DeveloperEvaluation {
 }
 
 /**
+ * Per-KPI component scores that participated in Engineering Score.
+ * Missing KPIs are omitted (never coerced to zero).
+ */
+export type EngineeringScoreComponents = Partial<
+  Record<EngineeringScoreKpi, number>
+>;
+
+/**
+ * Normalized weight map for the KPIs available on a developer.
+ * Values sum to 1 when at least one KPI is available.
+ */
+export type NormalizedWeights = Partial<Record<EngineeringScoreKpi, number>>;
+
+/** Output of the Engineering Score Engine. */
+export interface EngineeringScoreResult {
+  /**
+   * Full-precision Engineering Score (0–100 scale).
+   * Null when no implemented KPIs are available (No Data).
+   */
+  score: number | null;
+  /** Component scores used (only available KPIs). */
+  components: EngineeringScoreComponents;
+  /** Dynamically normalized weights that summed to the score. */
+  normalizedWeights: NormalizedWeights;
+}
+
+/**
  * Canonical developer object used throughout TeamPulse.
  *
- * Wraps {@link DeveloperEvaluation} with a profile status.
- *
- * Extension point (Milestone 8B): attach Engineering Score here without
- * changing the evaluation aggregation contract. Ranking is also deferred.
+ * Wraps {@link DeveloperEvaluation} with Engineering Score, status, and
+ * optional dense rank (assigned by assignDenseRanks).
  */
 export interface DeveloperProfile {
   evaluation: DeveloperEvaluation;
   status: DeveloperProfileStatus;
   /**
-   * Reserved for Sprint 3B Milestone 8B.
-   *
-   * When Engineering Score is introduced, extend this interface (or a
-   * dedicated subtype) with an `engineeringScore` field. Do not compute
-   * or attach a score in Milestone 8A.
+   * Full-precision Engineering Score (0–100).
+   * Null when no implemented KPIs are available (No Data).
    */
-  // engineeringScore?: EngineeringScore;
+  engineeringScore: number | null;
+  /**
+   * Explainable score breakdown (components + normalized weights).
+   * Null when Engineering Score could not be calculated.
+   */
+  engineeringScoreDetail: EngineeringScoreResult | null;
+  /**
+   * Dense rank among peers (1 = highest score).
+   * Null until assignDenseRanks runs, or when score is null.
+   */
+  rank: number | null;
 }
 
 /** Inputs required to assemble a {@link DeveloperEvaluation}. */

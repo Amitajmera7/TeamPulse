@@ -1,5 +1,6 @@
+import { calculateEngineeringScore } from "./calculate-engineering-score";
 import { buildDeveloperEvaluation } from "./build-developer-evaluation";
-import { resolveDeveloperProfileStatus } from "./status";
+import { hasCompletedWork, resolveDeveloperProfileStatus } from "./status";
 import type {
   BuildDeveloperEvaluationInput,
   DeveloperEvaluation,
@@ -11,12 +12,14 @@ import type {
  *
  * Pipeline:
  * 1. Assemble {@link DeveloperEvaluation} from intact engine results.
- * 2. Resolve profile status (including "No Data" for no completed work).
+ * 2. Calculate Engineering Score (dynamic weight normalization).
+ * 3. Resolve profile status from score bands (or "No Data").
  *
  * Developers with no completed work are still returned — they are never
- * filtered out. Their status is "No Data".
+ * filtered out. Their status is "No Data" and engineeringScore is null.
  *
- * Engineering Score and ranking are intentionally excluded (Milestone 8B).
+ * Dense ranking is applied separately via {@link assignDenseRanks}.
+ * Recovery remains visible on the evaluation and does not affect score.
  */
 export function buildDeveloperProfile(
   input: BuildDeveloperEvaluationInput
@@ -28,13 +31,30 @@ export function buildDeveloperProfile(
 /**
  * Wraps an existing {@link DeveloperEvaluation} into a {@link DeveloperProfile}.
  *
- * Useful when evaluation was already assembled and only status is needed.
+ * Calculates Engineering Score and status. Rank defaults to null until
+ * {@link assignDenseRanks} is applied to a peer set.
  */
 export function wrapDeveloperEvaluation(
   evaluation: DeveloperEvaluation
 ): DeveloperProfile {
+  if (!hasCompletedWork(evaluation)) {
+    return {
+      evaluation,
+      status: "No Data",
+      engineeringScore: null,
+      engineeringScoreDetail: null,
+      rank: null,
+    };
+  }
+
+  const detail = calculateEngineeringScore(evaluation);
+  const engineeringScore = detail.score;
+
   return {
     evaluation,
-    status: resolveDeveloperProfileStatus(evaluation),
+    status: resolveDeveloperProfileStatus(evaluation, engineeringScore),
+    engineeringScore,
+    engineeringScoreDetail: engineeringScore === null ? null : detail,
+    rank: null,
   };
 }
