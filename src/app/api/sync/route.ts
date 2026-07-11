@@ -1,34 +1,49 @@
 import { NextResponse } from "next/server";
-import { fetchAllIssues } from "@/services/jira/fetch-all-issues";
 
+import {
+  getSyncState,
+  runAnalyticsSync,
+} from "@/services/orchestrator";
+
+/**
+ * Returns the current analytics sync state (progress / status).
+ */
 export async function GET() {
-  try {
-    const data = await fetchAllIssues();
+  return NextResponse.json({
+    success: true,
+    syncState: getSyncState(),
+  });
+}
 
-    return NextResponse.json({
-      success: true,
-      totalReturned: data.issues.length,
+/**
+ * Triggers the Analytics Orchestration Engine.
+ *
+ * Thin controller — all pipeline logic lives in the orchestrator.
+ */
+export async function POST() {
+  const result = await runAnalyticsSync();
 
-      // Existing simplified response (keep this)
-      issues: data.issues.map((issue: any) => ({
-        key: issue.key,
-        summary: issue.fields.summary,
-        status: issue.fields.status?.name,
-        type: issue.fields.customfield_10132?.value,
-      })),
-
-      // 👇 First complete Jira issue for debugging
-      sampleIssue:
-  data.issues.find(
-    (issue: any) =>
-      issue.fields.worklog?.total > 0
-  ) || data.issues[0],
-    });
-  } catch (error: any) {
-    return NextResponse.json({
-      success: false,
-      error: error.message,
-      details: error?.response?.data,
-    });
+  if (!result.success) {
+    return NextResponse.json(
+      {
+        success: false,
+        syncState: result.syncState,
+        snapshotPublished: result.snapshotPublished,
+        generatedAt: result.generatedAt,
+        totalIssuesProcessed: result.totalIssuesProcessed,
+        totalWorklogsProcessed: result.totalWorklogsProcessed,
+        error: result.errorMessage,
+      },
+      { status: result.syncState.status === "Running" ? 409 : 500 }
+    );
   }
+
+  return NextResponse.json({
+    success: true,
+    syncState: result.syncState,
+    snapshotPublished: result.snapshotPublished,
+    generatedAt: result.generatedAt,
+    totalIssuesProcessed: result.totalIssuesProcessed,
+    totalWorklogsProcessed: result.totalWorklogsProcessed,
+  });
 }

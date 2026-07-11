@@ -1,10 +1,16 @@
 /**
- * Dashboard Aggregator V2 — builds DashboardData from Analytics Snapshot.
+ * Dashboard Aggregator V2 — builds DashboardData from analytics profiles.
  *
- * Sprint 3D Milestone 10B.
+ * Sprint 3D Milestone 10B / Sprint 4A Milestone 11A.
  *
  * Pipeline:
- *   Analytics Snapshot → Dashboard Aggregator → DashboardData → React
+ *   Developer Profiles + Technology Profiles
+ *       ↓
+ *   DashboardData
+ *       ↓
+ *   Analytics Snapshot (orchestrator)
+ *       ↓
+ *   React (via Dashboard Repository)
  *
  * Does not modify React components, dashboard-mock, or analytics engines.
  * Does not recalculate technology metrics — maps Technology Profiles only.
@@ -12,6 +18,7 @@
  */
 
 import type { AnalyticsSnapshot } from "@/services/snapshot";
+import type { DeveloperProfile } from "@/services/developer-profile";
 import type {
   TechnologyProfile,
   TechnologyStatus,
@@ -29,11 +36,20 @@ import {
 import type {
   DashboardData,
   EngineeringScoreData,
+  ReportingPeriod,
   ScoreComponents,
   TechnologyCardData,
   TrendChartData,
 } from "./types";
 import { statusFromPercent, TECH_CHART_COLORS, TECH_NAME_TO_ID } from "./utils";
+
+/** Inputs required to build DashboardData without a provisional snapshot. */
+export interface BuildDashboardDataInput {
+  developerProfiles: readonly DeveloperProfile[];
+  technologyProfiles: readonly TechnologyProfile[];
+  reportingPeriod: ReportingPeriod;
+  generatedAt: string;
+}
 
 /**
  * Maps Technology Profile status to dashboard MetricStatus.
@@ -127,8 +143,8 @@ function buildEngineeringScoreData(
   };
 }
 
-function buildScoreComponentsFromSnapshot(
-  developerProfiles: AnalyticsSnapshot["developerProfiles"]
+function buildScoreComponentsFromProfiles(
+  developerProfiles: readonly DeveloperProfile[]
 ): ScoreComponents {
   const health = weightedAverageEngineeringScore(developerProfiles);
   const quality = weightedAverageQuality(developerProfiles);
@@ -145,18 +161,22 @@ function buildScoreComponentsFromSnapshot(
 }
 
 /**
- * Builds {@link DashboardData} from an {@link AnalyticsSnapshot}.
+ * Builds {@link DashboardData} directly from analytics profiles.
  *
- * Uses developer and technology profiles from the snapshot.
- * Does not read or mutate `snapshot.dashboardData` (avoids circular projection).
+ * Does not require an Analytics Snapshot. The orchestrator builds DashboardData
+ * first, then assembles the completed snapshot from that result.
  *
  * Trends are placeholders — existing trend builders are not modified.
  */
-export function buildDashboardDataFromSnapshot(
-  snapshot: AnalyticsSnapshot
+export function buildDashboardData(
+  input: BuildDashboardDataInput
 ): DashboardData {
-  const { developerProfiles, technologyProfiles, reportingPeriod, generatedAt } =
-    snapshot;
+  const {
+    developerProfiles,
+    technologyProfiles,
+    reportingPeriod,
+    generatedAt,
+  } = input;
 
   const kpis = buildKpisFromSnapshot({
     developerProfiles,
@@ -172,7 +192,7 @@ export function buildDashboardDataFromSnapshot(
 
   return {
     engineeringScore: buildEngineeringScoreData(averageScore),
-    scoreComponents: buildScoreComponentsFromSnapshot(developerProfiles),
+    scoreComponents: buildScoreComponentsFromProfiles(developerProfiles),
     kpis,
     deliveryTrend,
     productivityTrend,
@@ -182,4 +202,21 @@ export function buildDashboardDataFromSnapshot(
     reportingPeriod: { ...reportingPeriod },
     updatedAt: generatedAt,
   };
+}
+
+/**
+ * Builds {@link DashboardData} from an {@link AnalyticsSnapshot}.
+ *
+ * Convenience wrapper that extracts profiles and delegates to
+ * {@link buildDashboardData}. Does not read `snapshot.dashboardData`.
+ */
+export function buildDashboardDataFromSnapshot(
+  snapshot: AnalyticsSnapshot
+): DashboardData {
+  return buildDashboardData({
+    developerProfiles: snapshot.developerProfiles,
+    technologyProfiles: snapshot.technologyProfiles,
+    reportingPeriod: snapshot.reportingPeriod,
+    generatedAt: snapshot.generatedAt,
+  });
 }

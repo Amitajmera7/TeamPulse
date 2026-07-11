@@ -12,11 +12,13 @@ export {
   mapDeveloperProfileToContributor,
 } from "./build-contributors";
 export {
+  buildDashboardData,
   buildDashboardDataFromSnapshot,
   buildPlaceholderTrends,
   mapTechnologyProfileToCard,
   mapTechnologyStatusToMetricStatus,
 } from "./build-dashboard-data";
+export type { BuildDashboardDataInput } from "./build-dashboard-data";
 export { buildEmptyDashboardData } from "./build-empty-dashboard-data";
 export {
   buildExecutiveBrief,

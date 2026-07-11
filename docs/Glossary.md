@@ -85,6 +85,14 @@ Mock data remains available for development, testing and demos.
 
 ---
 
+## Analytics Orchestrator
+
+Owns the end-to-end sync pipeline from Jira fetch through Analytics Snapshot publication.
+
+API routes remain thin controllers. Failed syncs never replace the previous completed snapshot, so the dashboard never sees partial analytics.
+
+---
+
 # B
 
 ## Business Contribution

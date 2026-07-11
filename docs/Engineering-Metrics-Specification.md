@@ -745,6 +745,56 @@ The repository remains the single entry point for the UI.
 
 ---
 
+## Analytics Orchestrator
+
+Status: Active (Sprint 4A Milestone 11A)
+
+### Purpose
+
+Connect Jira synchronization to Analytics Snapshot publication.
+
+### Pipeline
+
+```
+/api/sync
+    ↓
+Analytics Orchestrator
+    ↓
+Fetch Jira → Resolve Estimates → Resolve Worklogs
+    ↓
+Developer Profiles → Technology Profiles
+    ↓
+DashboardData → Analytics Snapshot → Publish
+```
+
+### Rules
+
+• Orchestrator owns the complete pipeline — API routes stay thin.
+
+• Publish only after every stage succeeds.
+
+• On failure, do not replace the previous completed snapshot.
+
+• SyncState tracks Idle → Running → Completed | Failed with step progress.
+
+• Dashboard Repository immediately reads the latest published snapshot.
+
+### SyncState
+
+• status
+
+• currentStep
+
+• startedAt
+
+• completedAt
+
+• progressPercent
+
+• errorMessage
+
+---
+
 # Engineering Principles
 
 ## Principle 1
