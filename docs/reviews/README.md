@@ -41,4 +41,6 @@
 - milestone-15-review.md
 - milestone-16-review.md
 - milestone-17-review.md
+- milestone-18-review.md
+- milestone-19-review.md
 ...

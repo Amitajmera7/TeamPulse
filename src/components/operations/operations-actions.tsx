@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Download, History, Play, RefreshCw } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -57,15 +58,11 @@ export function OperationsActions({
           <RefreshCw data-icon="inline-start" />
           Refresh
         </Button>
-        <Button
-          size="lg"
-          variant="outline"
-          disabled
-          title="Coming soon"
-          aria-label="View Sync History (placeholder)"
-        >
-          <History data-icon="inline-start" />
-          View Sync History
+        <Button size="lg" variant="outline" asChild>
+          <Link href="/operations/history" aria-label="View Sync History">
+            <History data-icon="inline-start" />
+            View Sync History
+          </Link>
         </Button>
         <Button
           size="lg"

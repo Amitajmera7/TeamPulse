@@ -28,6 +28,12 @@ export type {
   AnalyticsOpsStatus,
 } from "./last-sync-summary";
 export {
+  buildSyncHistoryId,
+  findInMemorySyncHistoryById,
+  getInMemorySyncHistory,
+  pushSyncRunHistory,
+} from "./sync-run-history";
+export {
   ANALYTICS_SYNC_STEPS,
   beginSyncState,
   completeSyncState,

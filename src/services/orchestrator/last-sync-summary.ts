@@ -6,6 +6,7 @@
 
 import type { AnalyticsSyncStep, SyncState } from "./sync-state";
 import type { SyncStatus } from "@/services/snapshot";
+import { pushSyncRunHistory } from "./sync-run-history";
 
 export type ValidationOpsStatus = "PASS" | "FAIL" | "Unknown" | "Not Run";
 export type WarehouseOpsStatus = "Persisted" | "Not Persisted" | "Unknown";
@@ -160,6 +161,8 @@ export function recordLastSyncSummary(input: {
     errorMessage: input.errorMessage,
     logLines: [...lastSyncSummary.logLines, outcomeLine].slice(-MAX_LOG_LINES),
   };
+
+  pushSyncRunHistory(lastSyncSummary);
 }
 
 /**

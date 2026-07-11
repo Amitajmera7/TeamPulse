@@ -107,4 +107,21 @@ export class PostgresSyncBatchRepository implements SyncBatchRepository {
 
     return result.rows.map(mapSyncBatchRow);
   }
+
+  async findRecent(
+    limit: number,
+    offset: number = 0
+  ): Promise<readonly SyncBatch[]> {
+    const safeLimit = Math.max(0, Math.min(Math.floor(limit), 500));
+    const safeOffset = Math.max(0, Math.floor(offset));
+
+    const result = await this.db.query<SyncBatchRow>(
+      `SELECT * FROM sync_batch
+       ORDER BY started_at DESC
+       LIMIT $1 OFFSET $2`,
+      [safeLimit, safeOffset]
+    );
+
+    return result.rows.map(mapSyncBatchRow);
+  }
 }

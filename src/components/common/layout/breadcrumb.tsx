@@ -19,7 +19,15 @@ function buildBreadcrumbsFromPath(pathname: string): BreadcrumbItem[] {
 
   return segments.map((segment, index) => {
     const href = `/${segments.slice(0, index + 1).join("/")}`;
-    const label = ROUTE_LABELS[segment] ?? segment;
+    let label = ROUTE_LABELS[segment] ?? segment;
+
+    if (segment === "history") {
+      if (segments[0] === "analytics") {
+        label = "Historical Analytics";
+      } else if (segments[0] === "operations") {
+        label = "Sync History";
+      }
+    }
 
     return {
       label,

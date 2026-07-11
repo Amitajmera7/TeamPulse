@@ -249,6 +249,14 @@ Read layer between the Dashboard UI and analytics sources. Exposes `GET /api/das
 
 Operator UI at `/operations` for monitoring TeamPulse sync health (status, duration, issues/worklogs, EAW batch id, validation/warehouse/analytics status). Consumes `GET /api/operations` and can trigger `POST /api/sync`. Does not change analytics formulas or dashboard calculations.
 
+## Sync History & Batch Explorer
+
+Operational history UI at `/operations/history` and `/operations/history/[batchId]`. Lists previous syncs (newest first) from warehouse `sync_batch` when available, merged with in-memory run history (fallback). Batch Explorer shows summary, counts, validation, logs, verification report, and pipeline timeline. APIs: `GET /api/operations/history`, `GET /api/operations/history/{batchId}`.
+
+## Historical Engineering Analytics
+
+Trend experience at `/analytics/history` backed by `GET /api/analytics/history`. Projects archived Analytics Snapshot values into chart-ready `TrendChartData` (Engineering Score, Technology Health, Value Delivered, Recovery, Capacity Utilization, Delivery Efficiency). Filters: time range (3/6/12 months), technology, developer. Uses the Analytics Read layer — does not recalculate formulas.
+
 ## Engineering Score
 
 Overall engineering performance score for a developer in a reporting period.

@@ -37,4 +37,10 @@ export interface SyncBatchRepository {
 
   /** Returns batches whose startedAt falls in the range (findByDateRange). */
   findByDateRange(range: DateRange): Promise<readonly SyncBatch[]>;
+
+  /**
+   * Returns the most recent batches ordered by startedAt DESC (findRecent).
+   * Pagination-ready; does not change warehouse schema.
+   */
+  findRecent(limit: number, offset?: number): Promise<readonly SyncBatch[]>;
 }

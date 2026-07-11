@@ -72,6 +72,7 @@ export const NAV_ITEMS: NavItemConfig[] = [
 export const ROUTE_LABELS: Record<string, string> = {
   dashboard: "Dashboard",
   operations: "Operations",
+  history: "Sync History",
   developers: "Developers",
   teams: "Teams",
   analytics: "Analytics",

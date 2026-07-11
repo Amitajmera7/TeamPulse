@@ -3,8 +3,14 @@
  *
  * Only Completed snapshots are accepted. Failures must not call this function
  * so the previous completed snapshot remains available to the Dashboard Repository.
+ *
+ * Also archives a slim history projection for Historical Engineering Analytics.
  */
 
+import {
+  buildSnapshotHistoryEntry,
+  pushSnapshotHistoryEntry,
+} from "@/services/analytics-read/history";
 import {
   setLatestCompletedSnapshot,
   type AnalyticsSnapshot,
@@ -24,6 +30,10 @@ export function publishAnalyticsSnapshot(
   snapshot: AnalyticsSnapshot
 ): PublishSnapshotResult {
   const published = setLatestCompletedSnapshot(snapshot);
+
+  if (published) {
+    pushSnapshotHistoryEntry(buildSnapshotHistoryEntry(snapshot));
+  }
 
   return {
     published,
