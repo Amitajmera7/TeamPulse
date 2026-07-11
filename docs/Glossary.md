@@ -223,6 +223,12 @@ Target design for cutting over TeamPulse from Jira-driven analytics to warehouse
 
 See: `docs/Warehouse-Integration-Architecture.md`
 
+## PostgreSQL Persistence (EAW)
+
+Infrastructure for storing Engineering Analytics Warehouse facts in PostgreSQL. Connection and transaction abstractions plus repository implementations. Schema DDL is documented and not auto-applied in Milestone 13A. Not yet wired into the live sync/dashboard path.
+
+See: `docs/PostgreSQL-Persistence.md`
+
 ## Engineering Score
 
 Overall engineering performance score for a developer in a reporting period.

@@ -120,11 +120,15 @@ One row **per worklog entry**.
 | Field | TS property |
 |-------|-------------|
 | BatchId | `batchId` |
+| WorklogKey | `worklogKey` |
+| JiraWorklogId | `jiraWorklogId` |
 | IssueKey | `issueKey` |
 | Developer | `developer` |
 | Started | `started` |
 | Hours | `hours` |
 | Author | `author` |
+
+**Idempotency:** `worklogKey` is unique within a batch (`PRIMARY KEY (batch_id, worklog_key)`). Prefer `jira:{jiraWorklogId}` when Jira’s worklog id is available at ingest; otherwise `fact:{sha256(...)}` over issue/developer/started/hours/author. See `persistence/schema/README.md`.
 
 ### Future: EngineeringQualityEvent (not implemented)
 
@@ -223,7 +227,7 @@ Suggested table mapping (design guidance only — **no SQL in this milestone**):
 | SyncBatch | `sync_batch` | PK `batch_id` |
 | EngineeringIssue | `engineering_issue` | PK/unique `(batch_id, issue_key)` |
 | EngineeringAllocation | `engineering_allocation` | PK/unique `(batch_id, issue_key, developer)` |
-| EngineeringWorklog | `engineering_worklog` | PK surrogate or `(batch_id, issue_key, developer, started, author)` |
+| EngineeringWorklog | `engineering_worklog` | PK `(batch_id, worklog_key)`; optional `jira_worklog_id` |
 
 ### Implementation plan (later milestones)
 
