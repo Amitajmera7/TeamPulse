@@ -3,6 +3,7 @@
  *
  * Sprint 5A Milestone 12A: domain entities + repository contracts.
  * Sprint 5B Milestone 13A: PostgreSQL persistence foundation (not wired to runtime).
+ * Sprint 5B Milestone 13B: in-memory validation harness (not wired to runtime).
  */
 
 export {
@@ -52,3 +53,21 @@ export type {
   Queryable,
   WarehouseTransactionClient,
 } from "./persistence";
+
+export {
+  formatValidationSummary,
+  validateCrossEntity,
+  validateEngineeringAllocations,
+  validateEngineeringIssues,
+  validateEngineeringWarehouseModel,
+  validateEngineeringWorklogs,
+  validateSyncBatch,
+} from "./validation";
+
+export type {
+  EngineeringWarehouseModel,
+  ValidationEntityKind,
+  ValidationFinding,
+  ValidationReport,
+  ValidationSeverity,
+} from "./validation";

@@ -11,6 +11,7 @@
 - Engineering-Analytics-Warehouse.md
 - Warehouse-Integration-Architecture.md
 - PostgreSQL-Persistence.md
+- EAW-Validation.md
 
 ## Engineering Standards
 
@@ -34,4 +35,5 @@
 - milestone-12A-review.md
 - milestone-12B-review.md
 - milestone-13A-review.md
+- milestone-13B-review.md
 ...

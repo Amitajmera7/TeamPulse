@@ -229,6 +229,12 @@ Infrastructure for storing Engineering Analytics Warehouse facts in PostgreSQL. 
 
 See: `docs/PostgreSQL-Persistence.md`
 
+## EAW Validation Harness
+
+In-memory validators that check Engineering Analytics Warehouse model consistency (SyncBatch, issues, allocations, worklogs, cross-entity rules) before any future PostgreSQL commit. Does not write to the database or change live sync runtime in Milestone 13B.
+
+See: `docs/EAW-Validation.md`
+
 ## Engineering Score
 
 Overall engineering performance score for a developer in a reporting period.
