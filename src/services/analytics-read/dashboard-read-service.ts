@@ -3,11 +3,8 @@
  *
  * Sprint 6B Milestone 16.
  *
- * Pipeline (today):
+ * Pipeline:
  *   Read Service → Dashboard Repository → Analytics Snapshot → Read Model
- *
- * Future: same service can read Completed EAW batches without changing the API
- * contract or React layout.
  *
  * Does not recalculate analytics formulas.
  */
@@ -24,8 +21,9 @@ import type { DashboardReadModel } from "./types";
 /**
  * Loads the dashboard read model from existing services.
  */
-export function getDashboardReadModel(): DashboardReadModel {
-  const { dashboardData, generatedAt } = getDashboardData();
+export async function getDashboardReadModel(): Promise<DashboardReadModel> {
+  const { dashboardData, generatedAt } = await getDashboardData();
+
   const syncState = getSyncState();
 
   return buildDashboardReadModel({

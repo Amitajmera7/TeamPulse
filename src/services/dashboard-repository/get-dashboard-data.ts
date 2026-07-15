@@ -11,10 +11,11 @@
  */
 
 import type { AnalyticsSnapshot } from "@/services/snapshot";
-import { getLatestCompletedSnapshot } from "@/services/snapshot";
+import { getLatestCompletedSnapshot, recoverLatestSnapshot } from "@/services/snapshot";
 
 import { buildEmptyDashboardData } from "@/services/dashboard/build-empty-dashboard-data";
 import type { DashboardData } from "@/services/dashboard/types";
+
 
 /**
  * Result returned by the Dashboard Repository.
@@ -62,8 +63,10 @@ export function isUsableAnalyticsSnapshot(
  * - Returns empty DashboardData when missing / invalid — never throws.
  * - Does not recalculate analytics or rebuild the snapshot.
  */
-export function getDashboardDataFromRepository(): DashboardRepositoryResult {
+export async function getDashboardDataFromRepository(): Promise<DashboardRepositoryResult> {
   try {
+    await recoverLatestSnapshot();
+
     const snapshot = getLatestCompletedSnapshot();
 
     if (!isUsableAnalyticsSnapshot(snapshot)) {
@@ -73,10 +76,24 @@ export function getDashboardDataFromRepository(): DashboardRepositoryResult {
       };
     }
 
-    return {
-      dashboardData: snapshot.dashboardData,
-      generatedAt: snapshot.generatedAt,
-    };
+    console.log("========== DASHBOARD REPOSITORY ==========");
+console.log("Snapshot exists:", snapshot != null);
+console.log("Generated:", snapshot.generatedAt);
+
+console.log({
+  engineeringScore: snapshot.dashboardData.engineeringScore.value,
+  kpis: snapshot.dashboardData.kpis.length,
+  contributors: snapshot.dashboardData.contributors.length,
+  technologies: snapshot.dashboardData.technologies.length,
+  insights: snapshot.dashboardData.insights.length,
+});
+
+console.log("=========================================");
+
+return {
+  dashboardData: snapshot.dashboardData,
+  generatedAt: snapshot.generatedAt,
+};
   } catch {
     return {
       dashboardData: buildEmptyDashboardData(),

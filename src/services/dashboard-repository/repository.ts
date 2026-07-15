@@ -1,24 +1,16 @@
-/**
- * Dashboard Repository facade.
- *
- * Abstracts the data source for DashboardData. Current provider: Analytics Snapshot.
- * Future providers (database, cache) can replace the internals without changing React.
- */
-
-import {
-  getDashboardDataFromRepository,
-  isUsableAnalyticsSnapshot,
-  type DashboardRepositoryResult,
-} from "./get-dashboard-data";
+import type { DashboardRepositoryResult } from "./get-dashboard-data";
+import { getDashboardDataFromRepository } from "./get-dashboard-data";
 
 /**
- * Dashboard Repository — sole UI entry for DashboardData.
+ * Dashboard Repository
  *
- * @returns Presentation data plus optional snapshot `generatedAt` for Last Sync.
+ * Source of truth:
+ *   PostgreSQL Snapshot Archive
+ *
+ * Memory snapshot is only a fallback.
  */
-export function getDashboardData(): DashboardRepositoryResult {
+export async function getDashboardData(): Promise<DashboardRepositoryResult> {
   return getDashboardDataFromRepository();
 }
 
 export type { DashboardRepositoryResult };
-export { isUsableAnalyticsSnapshot };

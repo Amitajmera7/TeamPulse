@@ -14,6 +14,8 @@ import { cn } from "@/lib/utils";
 
 interface DashboardHeroProps {
   engineeringScore: EngineeringScoreData;
+  generatedAt?: string | null;
+  syncStatus?: string;
   className?: string;
 }
 
@@ -50,6 +52,8 @@ function scoreSubtitle(score: EngineeringScoreData): string {
 
 export function DashboardHero({
   engineeringScore,
+  generatedAt,
+  syncStatus,
   className,
 }: DashboardHeroProps) {
   const reportingMonth = format(new Date(), "MMMM yyyy");
@@ -74,10 +78,14 @@ export function DashboardHero({
             <MetaChip icon={CalendarDays} value={reportingMonth} />
             <MetaChip icon={Users} value="All Teams" />
             <MetaChip
-              icon={CalendarDays}
-              value={`Live · Updated ${formatDistanceToNow(new Date(), { addSuffix: true })}`}
-              live
-            />
+               icon={CalendarDays}
+                value={
+                  generatedAt
+                    ? `Live • Last Sync ${format(new Date(generatedAt), "dd MMM yyyy, h:mm a")}`
+                    : "Live"
+                }
+                live={syncStatus === "Completed"}
+/>
           </div>
         </div>
 

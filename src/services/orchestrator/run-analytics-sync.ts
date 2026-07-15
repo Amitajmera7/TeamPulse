@@ -16,6 +16,7 @@ import { buildTechnologyProfiles } from "@/services/technology-profile";
 import type { JiraIssueInput } from "@/services/task-evaluation/task-evaluation";
 import { ANALYTICS_SNAPSHOT_VERSION } from "@/services/snapshot";
 import { validateEngineeringWarehouseModel } from "@/services/engineering-warehouse";
+import { saveAnalyticsSnapshot } from "@/services/snapshot-archive";
 
 import {
   assembleDeveloperProfiles,
@@ -40,6 +41,7 @@ import {
   updateSyncStep,
   type SyncState,
 } from "./sync-state";
+import { getLatestCompletedSnapshot } from "@/services/snapshot";
 
 export interface AnalyticsSyncResult {
   success: boolean;
@@ -62,8 +64,10 @@ export interface AnalyticsSyncResult {
  * EAW facts are validated then persisted atomically (or not at all).
  */
 export async function runAnalyticsSync(): Promise<AnalyticsSyncResult> {
+  console.log("******* TEAMPULSE SYNC STARTED ********");
   const current = getSyncState();
   if (current.status === "Running") {
+    
     return {
       success: false,
       syncState: current,
@@ -74,6 +78,7 @@ export async function runAnalyticsSync(): Promise<AnalyticsSyncResult> {
       errorMessage: "Analytics sync is already running.",
       eawBatchId: null,
       eawPersisted: false,
+      
     };
   }
 
@@ -178,14 +183,63 @@ export async function runAnalyticsSync(): Promise<AnalyticsSyncResult> {
       totalWorklogsProcessed,
     });
 
+    
+
+    const snapshotJson = JSON.stringify(snapshot);
+    const bytes = Buffer.byteLength(snapshotJson, "utf8");
+    
+    console.log("========== SNAPSHOT ==========");
+    console.log("Bytes:", bytes);
+    console.log("KB:", (bytes / 1024).toFixed(2));
+    
+    console.log({
+      developerProfiles: snapshot.developerProfiles.length,
+      technologyProfiles: snapshot.technologyProfiles.length,
+      dashboardContributors: snapshot.dashboardData.contributors.length,
+      dashboardTechnologies: snapshot.dashboardData.technologies.length,
+    });
+    
+    console.log("==============================");
+
     // Guard: versioned immutable snapshot
     if (snapshot.version !== ANALYTICS_SNAPSHOT_VERSION) {
       throw new Error("Snapshot version mismatch.");
     }
 
-    // 11. Publish Snapshot (only after full success)
-    updateSyncStep("Publish Snapshot", progressForStepIndex(11));
-    const publishResult = publishAnalyticsSnapshot(snapshot);
+  // 11. Persist Analytics Snapshot
+if (!eawBatchId) {
+  throw new Error("Missing batchId for Analytics Snapshot persistence.");
+}
+
+await saveAnalyticsSnapshot(eawBatchId, snapshot);
+
+console.log(
+  `[SNAPSHOT] Saved batch=${eawBatchId} generatedAt=${snapshot.generatedAt}`
+);
+
+// 12. Publish Snapshot
+updateSyncStep("Publish Snapshot", progressForStepIndex(11));
+
+const publishResult = publishAnalyticsSnapshot(snapshot);
+    
+    console.log("========== PUBLISH ==========");
+console.log("Published:", publishResult.published);
+console.log("Generated At:", publishResult.generatedAt);
+console.log("=============================");
+
+
+
+const latest = getLatestCompletedSnapshot();
+
+console.log("========== READ BACK ==========");
+console.log("Snapshot exists:", latest !== null);
+
+if (latest) {
+  console.log("Generated:", latest.generatedAt);
+  console.log("Developers:", latest.developerProfiles.length);
+}
+console.log("===============================");
+
 
     if (!publishResult.published) {
       throw new Error("Failed to publish completed Analytics Snapshot.");

@@ -30,3 +30,5 @@ export type {
   SyncMetadata,
   SyncStatus,
 } from "./types";
+
+export { recoverLatestSnapshot } from "./recover-latest-snapshot";

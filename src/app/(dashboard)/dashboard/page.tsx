@@ -44,7 +44,11 @@ export default async function DashboardPage() {
   return (
     <>
       <DashboardTopBar />
-      <DashboardHero engineeringScore={data.engineeringScore} />
+      <DashboardHero
+  engineeringScore={data.engineeringScore}
+  generatedAt={readModel.generatedAt}
+  syncStatus={readModel.syncStatus}
+/>
       <PageContainer>
         <ExecutiveDashboard data={data} />
       </PageContainer>
