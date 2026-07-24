@@ -2,6 +2,7 @@ import {
   Activity,
   BarChart3,
   Bot,
+  CalendarClock,
   Compass,
   LayoutDashboard,
   Link2,
@@ -35,6 +36,11 @@ export const NAV_ITEMS: NavItemConfig[] = [
     label: "Explorer",
     href: "/explorer",
     icon: Compass,
+  },
+  {
+    label: "Allocation",
+    href: "/allocation",
+    icon: CalendarClock,
   },
   {
     label: "Developers",
@@ -79,6 +85,7 @@ export const ROUTE_LABELS: Record<string, string> = {
   dashboard: "Dashboard",
   operations: "Operations",
   explorer: "Explorer",
+  allocation: "Allocation",
   history: "Sync History",
   developers: "Developers",
   teams: "Teams",
@@ -98,7 +105,7 @@ export interface NavGroup {
 export const NAV_GROUPS: NavGroup[] = [
   {
     label: "Overview",
-    items: ["/dashboard", "/operations", "/explorer"],
+    items: ["/dashboard", "/operations", "/explorer", "/allocation"],
   },
   {
     label: "Analytics",
